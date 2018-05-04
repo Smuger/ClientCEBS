@@ -14,6 +14,7 @@ public class RegisterController implements Initializable {
     
     // Layouts
     private final static String login = "/fxml/Login.fxml";
+    private final static String browse = "/fxml/Browse.fxml";
     
     @FXML
     private TextField passwd1, passwd2, name, email;
@@ -36,7 +37,9 @@ public class RegisterController implements Initializable {
     @FXML
     private void registerButton(ActionEvent event) throws IOException{
         try{
+            System.err.println("Get register data");
             model.register(name.getText(), email.getText(), passwd1.getText(), 1, "USER");
+            model.changeScene(browse);
         }
         catch (Exception ex){
             System.err.println(ex);

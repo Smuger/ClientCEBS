@@ -21,9 +21,12 @@ import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.ProtocolException;
 import java.net.URL;
-
 import javax.net.ssl.HttpsURLConnection;
 import static org.apache.http.HttpHeaders.USER_AGENT;
+import org.apache.http.impl.client.CloseableHttpClient;
+import org.apache.http.impl.client.HttpClientBuilder;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 
 public class MainApp extends Application {
@@ -58,17 +61,45 @@ public class MainApp extends Application {
         }
     }
     public void register(String name, String email, String password, int cabineNumber, String role ) throws Exception{
-        
+        JSONObject json = new JSONObject();
+        json.put("name", name);
+        json.put("email", email);  
+        json.put("password", password);   
+        json.put("cabineNumber", cabineNumber);  
+        json.put("role", role);   
+        HttpPost request = new HttpPost("http://localhost:8181/api/customers/register?");
+        postJSON(request, json);
     }
     
     public int login(String email, String password) throws IOException{
         String url = "http://localhost:8181/api/customers/login?";
         String urlParameters = "email="+email+"&password="+password;
-        post(url, urlParameters);
+        postPARAM(url, urlParameters);
         return 1;
     }
+    
+    public void postJSON(HttpPost request, JSONObject json) throws JSONException, IOException{
+         
+
+        CloseableHttpClient httpClient = HttpClientBuilder.create().build();
+
+        try {
+        StringEntity params = new StringEntity(json.toString());
+        request.addHeader("content-type", "application/json");
+        request.setEntity(params);
+        httpClient.execute(request);
+        // handle response here...
+        } 
+        catch (Exception ex) {
+            System.err.println(ex);
+            // handle exception here
+        } 
+        finally {
+        httpClient.close();
+}
+    }
    
-    public void post(String url, String urlParameters) throws MalformedURLException, ProtocolException, IOException{
+    public void postPARAM(String url, String urlParameters) throws MalformedURLException, ProtocolException, IOException{
         
 	URL obj = new URL(url);
 	HttpURLConnection con = (HttpURLConnection) obj.openConnection();

@@ -36,6 +36,7 @@ public class LoginController implements Initializable {
     
     @FXML
     private void loginButton(ActionEvent event) throws Exception{
+        // TO DO login fail handler
         model.changeScene(browse);
         model.login(email.getText(), password.getText());
     }

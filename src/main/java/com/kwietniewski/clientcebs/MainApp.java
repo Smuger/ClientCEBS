@@ -22,11 +22,16 @@ import java.net.HttpURLConnection;
 import java.net.ProtocolException;
 import java.net.URL;
 import javax.net.ssl.HttpsURLConnection;
+import javax.net.ssl.SSLEngineResult;
 import static org.apache.http.HttpHeaders.USER_AGENT;
+import org.apache.http.client.HttpClient;
+import org.apache.http.client.methods.HttpGet;
 import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClientBuilder;
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
+import sun.misc.IOUtils;
 
 
 public class MainApp extends Application {
@@ -60,7 +65,7 @@ public class MainApp extends Application {
             System.err.println(ex);
         }
     }
-    public void register(String name, String email, String password, int cabineNumber, String role ) throws Exception{
+    public int register(String name, String email, String password, int cabineNumber, String role ) throws Exception{
         JSONObject json = new JSONObject();
         json.put("name", name);
         json.put("email", email);  
@@ -68,17 +73,18 @@ public class MainApp extends Application {
         json.put("cabineNumber", cabineNumber);  
         json.put("role", role);   
         HttpPost request = new HttpPost("http://localhost:8181/api/customers/register?");
-        postJSON(request, json);
+        
+        return postJSON(request, json);
     }
     
     public int login(String email, String password) throws IOException{
         String url = "http://localhost:8181/api/customers/login?";
         String urlParameters = "email="+email+"&password="+password;
-        postPARAM(url, urlParameters);
-        return 1;
+       
+        return postPARAM(url, urlParameters);
     }
     
-    public void postJSON(HttpPost request, JSONObject json) throws JSONException, IOException{
+    public int postJSON(HttpPost request, JSONObject json) throws JSONException, IOException{
          
 
         CloseableHttpClient httpClient = HttpClientBuilder.create().build();
@@ -87,8 +93,15 @@ public class MainApp extends Application {
         StringEntity params = new StringEntity(json.toString());
         request.addHeader("content-type", "application/json");
         request.setEntity(params);
-        httpClient.execute(request);
-        // handle response here...
+        HttpResponse response = httpClient.execute(request);
+        
+        int statusCode = response.getStatusLine().getStatusCode();
+    
+        System.out.println("\nSending 'POST' JSON request to URL : " + request.toString());
+	System.out.println("Post parameters : " + json.toString());
+        System.out.println("Response Code : " + statusCode);
+        System.out.println("Response value: " + response.toString());
+        return statusCode;
         } 
         catch (Exception ex) {
             System.err.println(ex);
@@ -96,10 +109,11 @@ public class MainApp extends Application {
         } 
         finally {
         httpClient.close();
-}
+        }
+        return 0;
     }
    
-    public void postPARAM(String url, String urlParameters) throws MalformedURLException, ProtocolException, IOException{
+    public int postPARAM(String url, String urlParameters) throws MalformedURLException, ProtocolException, IOException{
         
 	URL obj = new URL(url);
 	HttpURLConnection con = (HttpURLConnection) obj.openConnection();
@@ -118,8 +132,8 @@ public class MainApp extends Application {
 
 	int responseCode = con.getResponseCode();
 	System.out.println("\nSending 'POST' request to URL : " + url);
-	System.out.println("Post parameters : " + urlParameters);
 	System.out.println("Response Code : " + responseCode);
+        System.out.println("Post parameters : " + urlParameters);
 
 	BufferedReader in = new BufferedReader(
 	        new InputStreamReader(con.getInputStream()));
@@ -133,6 +147,7 @@ public class MainApp extends Application {
 		
 	//print result
 	System.out.println(response.toString());
+        return responseCode;
     }
     
     public static void main(String[] args) {

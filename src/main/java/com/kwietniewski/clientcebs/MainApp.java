@@ -80,8 +80,14 @@ public class MainApp extends Application {
     public int login(String email, String password) throws IOException{
         String url = "http://localhost:8181/api/customers/login?";
         String urlParameters = "email="+email+"&password="+password;
-       
+        
         return postPARAM(url, urlParameters);
+    }
+    
+    public int search(String phrase) throws ProtocolException, IOException{
+        String url = "http://localhost:8181/api/excursions/findOne?";
+        String urlParameters = "id="+phrase;
+        return getPARAM(url, urlParameters);
     }
     
     public int postJSON(HttpPost request, JSONObject json) throws JSONException, IOException{
@@ -117,7 +123,7 @@ public class MainApp extends Application {
         
 	URL obj = new URL(url);
 	HttpURLConnection con = (HttpURLConnection) obj.openConnection();
-
+        
 	//add reuqest header
 	con.setRequestMethod("POST");
 	con.setRequestProperty("User-Agent", USER_AGENT);
@@ -131,7 +137,7 @@ public class MainApp extends Application {
 	wr.close();
 
 	int responseCode = con.getResponseCode();
-	System.out.println("\nSending 'POST' request to URL : " + url);
+	System.out.println("\nSending " + "GET" + " request to URL : " + url);
 	System.out.println("Response Code : " + responseCode);
         System.out.println("Post parameters : " + urlParameters);
 
@@ -147,6 +153,45 @@ public class MainApp extends Application {
 		
 	//print result
 	System.out.println(response.toString());
+        System.out.println(responseCode);
+        return responseCode;
+    }
+    
+    public int getPARAM(String url, String urlParameters) throws MalformedURLException, ProtocolException, IOException{
+        
+	URL obj = new URL(url);
+	HttpURLConnection con = (HttpURLConnection) obj.openConnection();
+        
+	//add reuqest header
+	con.setRequestMethod("GET");
+	con.setRequestProperty("User-Agent", USER_AGENT);
+	con.setRequestProperty("Accept-Language", "en-US,en;q=0.5");
+		
+	// Send post request
+	con.setDoOutput(true);
+	DataOutputStream wr = new DataOutputStream(con.getOutputStream());
+	wr.writeBytes(urlParameters);
+	wr.flush();
+	wr.close();
+
+	int responseCode = con.getResponseCode();
+	System.out.println("\nSending " + "GET" + " request to URL : " + url);
+	System.out.println("Response Code : " + responseCode);
+        System.out.println("Post parameters : " + urlParameters);
+
+	BufferedReader in = new BufferedReader(
+	        new InputStreamReader(con.getInputStream()));
+	String inputLine;
+	StringBuffer response = new StringBuffer();
+
+	while ((inputLine = in.readLine()) != null) {
+		response.append(inputLine);
+	}
+	in.close();
+		
+	//print result
+	System.out.println(response.toString());
+        System.out.println(responseCode);
         return responseCode;
     }
     

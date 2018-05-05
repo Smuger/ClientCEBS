@@ -1,6 +1,7 @@
 package com.kwietniewski.clientcebs;
 
 import java.io.IOException;
+import java.net.ConnectException;
 import java.net.URL;
 import java.util.ResourceBundle;
 import javafx.event.ActionEvent;
@@ -37,7 +38,13 @@ public class LoginController implements Initializable {
     @FXML
     private void loginButton(ActionEvent event) throws Exception{
         // TO DO login fail handler
-        model.changeScene(browse);
-        model.login(email.getText(), password.getText());
+        
+        try {
+            model.login(email.getText(), password.getText());
+            model.changeScene(browse);
+        }
+        catch(Exception ex){
+            error.setText("Server Down");
+        }
     }
 }

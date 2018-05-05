@@ -6,6 +6,7 @@ import java.util.ResourceBundle;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
+import javafx.scene.control.TextField;
 
 public class BrowseController implements Initializable {
     
@@ -13,6 +14,9 @@ public class BrowseController implements Initializable {
     private final static String booking = "/fxml/Booking.fxml";
     private final static String login = "/fxml/Login.fxml";
     private final static String result = "/fxml/Result.fxml";
+    
+    @FXML
+    private TextField search;
     
     MainApp model = new MainApp();
     
@@ -33,6 +37,9 @@ public class BrowseController implements Initializable {
     
     @FXML
     private void searchButton(ActionEvent event) throws IOException{
+        String phrase = search.getText().toString();
+        System.out.println("Search phrase: " + phrase);
+        model.search(phrase);
         model.changeScene(result);
     }
 }

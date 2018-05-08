@@ -97,17 +97,16 @@ public class MainApp extends Application{
     }
     
     public HttpResponse getJSON(String url, JSONObject json) throws UnsupportedEncodingException, IOException{
-        HttpPost request = new HttpPost(url);
-        StringEntity params = new StringEntity(json.toString());
-        request.addHeader("content-type", "application/json");
-        request.setEntity(params);
         // GET
-        HttpGet httpGet = new HttpGet(url); 
+        HttpGet httpGet = new HttpGet(url);
+        //StringEntity params = new StringEntity(json.toString());
+        httpGet.addHeader("content-type", "application/json");
+        //httpGet.setEntity(params);
         HttpResponse response = client.execute(httpGet);
         
         int statusCode = response.getStatusLine().getStatusCode();
         
-        System.out.println("\nSending 'POST' JSON request to URL : " + request.toString());
+        System.out.println("\nSending 'POST' JSON request to URL : " + httpGet.toString());
 	System.out.println("Post parameters : " + json.toString());
         System.out.println("Response Code : " + statusCode);
         System.out.println("Response value: " + response.toString());

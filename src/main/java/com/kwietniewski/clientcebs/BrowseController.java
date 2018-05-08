@@ -1,12 +1,15 @@
 package com.kwietniewski.clientcebs;
 
 import java.io.IOException;
+import java.net.MalformedURLException;
+import java.net.ProtocolException;
 import java.net.URL;
 import java.util.ResourceBundle;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.TextField;
+import org.json.JSONException;
 
 public class BrowseController implements Initializable {
     
@@ -33,13 +36,14 @@ public class BrowseController implements Initializable {
     @FXML
     private void logoutButton(ActionEvent event) throws IOException{
         model.changeScene(login);
+        model.disconnect();
     }
     
     @FXML
-    private void searchButton(ActionEvent event) throws IOException{
+    private void searchButton(ActionEvent event) throws IOException, ProtocolException, MalformedURLException, JSONException{
         String phrase = search.getText().toString();
         System.out.println("Search phrase: " + phrase);
-        model.search(phrase);
+        model.searchDataHandler(phrase);
         model.changeScene(result);
     }
 }

@@ -40,11 +40,12 @@ public class LoginController implements Initializable {
         // TO DO login fail handler
         
         try {
-            model.login(email.getText(), password.getText());
+            model.loginDataHandler(email.getText(), password.getText());
             model.changeScene(browse);
         }
         catch(Exception ex){
             error.setText("Server Down");
+            System.err.println(ex);
         }
     }
 }

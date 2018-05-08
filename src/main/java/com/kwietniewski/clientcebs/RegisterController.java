@@ -37,7 +37,7 @@ public class RegisterController implements Initializable {
     private void registerButton(ActionEvent event) throws IOException{
         try{
             System.err.println("Get register data");
-            model.register(name.getText(), email.getText(), passwd1.getText(), 1, "USER");
+            model.registerDataHandler(name.getText(), email.getText(), passwd1.getText(), 1, "USER");
             model.changeScene(login);
         }
         catch (Exception ex){

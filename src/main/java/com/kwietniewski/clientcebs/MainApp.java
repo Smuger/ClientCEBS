@@ -7,10 +7,13 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
+import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
+import org.apache.http.client.ResponseHandler;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.entity.StringEntity;
+import org.apache.http.impl.client.BasicResponseHandler;
 import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClients;
 import org.apache.http.impl.conn.PoolingHttpClientConnectionManager;
@@ -19,7 +22,7 @@ import org.json.JSONObject;
 
 public class MainApp extends Application{
     public static Stage window;
-    public CloseableHttpClient client = connect();
+    public static CloseableHttpClient client;
     // Window change handler
     
     public void start(Stage window) throws IOException{
@@ -43,10 +46,24 @@ public class MainApp extends Application{
     
     // Establishing connections
     
+    public static void rememberClient(CloseableHttpClient localClient){
+        MainApp.client = localClient;
+        
+    }
+    
     public CloseableHttpClient connect(){
-        PoolingHttpClientConnectionManager connManager = new PoolingHttpClientConnectionManager();
-        CloseableHttpClient client = HttpClients.custom()
-        .setConnectionManager(connManager).build();
+        if (client == null){
+            PoolingHttpClientConnectionManager connManager = new PoolingHttpClientConnectionManager();
+            CloseableHttpClient client = HttpClients.custom()
+            .setConnectionManager(connManager).build();
+            System.out.println("New connection: " + client);
+            rememberClient(client);
+            
+        }
+        
+        else{
+            System.err.println("User already login");
+        }
         
         return client;
     }
@@ -66,13 +83,15 @@ public class MainApp extends Application{
     }
     
     public void loginDataHandler(String email, String password) throws IOException{
+        connect();
         String urlParameters = "http://localhost:8181/api/customers/login?" + "email="+email+"&password="+password;
         postPARAM(urlParameters);
+
     }
     
     public void searchDataHandler(String phrase) throws IOException{
         String url = "http://localhost:8181/api/excursions/findAll?"+"word="+phrase;
-        getPARAM(url);
+        getJSON(url);
         
     }
     
@@ -96,7 +115,7 @@ public class MainApp extends Application{
         return response;
     }
     
-    public HttpResponse getJSON(String url, JSONObject json) throws UnsupportedEncodingException, IOException{
+    public HttpResponse getJSON(String url) throws UnsupportedEncodingException, IOException{
         // GET
         HttpGet httpGet = new HttpGet(url);
         //StringEntity params = new StringEntity(json.toString());
@@ -105,17 +124,19 @@ public class MainApp extends Application{
         HttpResponse response = client.execute(httpGet);
         
         int statusCode = response.getStatusLine().getStatusCode();
-        
+        String responseString = new BasicResponseHandler().handleResponse(response);
         System.out.println("\nSending 'POST' JSON request to URL : " + httpGet.toString());
-	System.out.println("Post parameters : " + json.toString());
         System.out.println("Response Code : " + statusCode);
         System.out.println("Response value: " + response.toString());
-        
+        System.out.println("Response body: " + responseString);
+        System.out.println("Client " + client);
         return response;
     }
     
     public HttpResponse postPARAM(String url) throws IOException{
         HttpPost httpPost = new HttpPost(url);
+        System.out.println(httpPost);
+        System.out.println(client);
         HttpResponse response = client.execute(httpPost);
         int statusCode = response.getStatusLine().getStatusCode();
         System.out.println(statusCode);
@@ -127,8 +148,7 @@ public class MainApp extends Application{
         HttpGet HttpGet = new HttpGet(url);
         HttpResponse response = client.execute(HttpGet);
         int statusCode = response.getStatusLine().getStatusCode();
-        System.out.println(statusCode);
-        
+      
         return response;
     }
     

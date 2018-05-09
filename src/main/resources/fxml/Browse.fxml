@@ -14,7 +14,7 @@
    <children>
       <VBox prefHeight="200.0" prefWidth="100.0">
          <children>
-            <TextField promptText="Browse Excursion" />
+            <TextField fx:id="search" promptText="Browse Excursion" />
             <Button mnemonicParsing="false" onAction="#searchButton" text="Search" />
             <Button mnemonicParsing="false" onAction="#bookingButton" text="My Bookings" />
             <Button mnemonicParsing="false" onAction="#logoutButton" text="Logout" />

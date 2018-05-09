@@ -36,7 +36,9 @@ public class RegisterController implements Initializable {
     @FXML
     private void registerButton(ActionEvent event) throws IOException{
         try{
-            model.register(name.getText(), email.getText(), passwd1.getText(), 1, "USER");
+            System.err.println("Get register data");
+            model.registerDataHandler(name.getText(), email.getText(), passwd1.getText(), 1, "USER");
+            model.changeScene(login);
         }
         catch (Exception ex){
             System.err.println(ex);

@@ -16,9 +16,13 @@
       <VBox prefHeight="200.0" prefWidth="100.0">
          <children>
             <TextField fx:id="name" promptText="Full name" />
+            <Label text="( Min 3 / Max 10 characters)" />
             <TextField fx:id="email" promptText="Email" />
+            <Label text="( Min 5 / Max 30 characters)" />
             <TextField fx:id="passwd1" promptText="Password" />
+            <Label text="( Min 3 / Max 30 characters)" />
             <TextField fx:id="passwd2" promptText="Password" />
+            <Label text="( Min 3 / Max 30 characters)" />
             <Text fx:id="error" strokeType="OUTSIDE" strokeWidth="0.0" />
             <Button mnemonicParsing="false" onAction="#registerButton" text="Register" />
             <Button mnemonicParsing="false" onAction="#backButton" text="back" />

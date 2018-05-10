@@ -78,6 +78,8 @@ public class MainApp extends Application{
         json.put("cabineNumber", cabineNumber);  
         json.put("role", role);   
         String url = "http://localhost:8181/api/customers/register?";
+        System.out.println("Register JSON created, sending to server");
+        connect();
         postJSON(url, json);
      
     }
@@ -99,11 +101,15 @@ public class MainApp extends Application{
     
     public HttpResponse postJSON(String url, JSONObject json) throws IOException{
         // POST
+        System.out.println("as a client: " + client);
         HttpPost httpPost = new HttpPost(url);
+        System.out.println(httpPost);
         StringEntity params = new StringEntity(json.toString());
+        System.out.println(params);
         httpPost.addHeader("content-type", "application/json");
         httpPost.setEntity(params);
         HttpResponse response = client.execute(httpPost);
+        System.out.println(response);
         //HttpResponse response = httpClient.execute(httpPost);
         
         int statusCode = response.getStatusLine().getStatusCode();
@@ -154,5 +160,7 @@ public class MainApp extends Application{
     
     public void disconnect() throws IOException{
         client.close();
+        rememberClient(null);
+        
     }
 }

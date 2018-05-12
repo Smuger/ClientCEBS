@@ -8,6 +8,8 @@ import java.util.ResourceBundle;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
+import javafx.scene.control.ListView;
+import javafx.scene.control.SelectionMode;
 import javafx.scene.control.TextField;
 import org.json.JSONException;
 
@@ -16,12 +18,15 @@ public class BrowseController implements Initializable {
     // Layouts
     private final static String booking = "/fxml/Booking.fxml";
     private final static String login = "/fxml/Login.fxml";
-    private final static String result = "/fxml/Result.fxml";
     
+    @FXML
+    private ListView listView;
+
     @FXML
     private TextField search;
     
     MainApp model = new MainApp();
+    //ResultController resultController = new ResultController();
     
     @Override
     public void initialize(URL url, ResourceBundle rb) {
@@ -37,6 +42,7 @@ public class BrowseController implements Initializable {
     private void logoutButton(ActionEvent event) throws IOException{
         model.changeScene(login);
         model.disconnect();
+        listView.setVisible(false);
     }
     
     @FXML
@@ -44,6 +50,16 @@ public class BrowseController implements Initializable {
         String phrase = search.getText().toString();
         System.out.println("Search phrase: " + phrase);
         model.searchDataHandler(phrase);
-        model.changeScene(result);
+        /*System.out.print("Populating List View");
+        resultController.populateListView();
+        System.out.print("Populating List View ended");*/
+        listView.setVisible(true);
+        populateListView();
+    }
+    
+    private void populateListView() throws JSONException{
+        
+        listView.getItems().addAll(model.nameOfAllExcursions());
+        listView.getSelectionModel().setSelectionMode(SelectionMode.SINGLE);
     }
 }

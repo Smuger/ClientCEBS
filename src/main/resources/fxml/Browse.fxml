@@ -7,7 +7,7 @@
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 
-<AnchorPane id="AnchorPane" prefHeight="400.0" prefWidth="600.0" styleClass="mainFxmlClass" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.kwietniewski.clientcebs.BrowseController">
+<AnchorPane id="AnchorPane" fx:id="result" prefHeight="400.0" prefWidth="600.0" styleClass="mainFxmlClass" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.kwietniewski.clientcebs.BrowseController">
     <stylesheets>
         <URL value="@/styles/browse.css" />
     </stylesheets>
@@ -15,6 +15,7 @@
       <VBox prefHeight="200.0" prefWidth="100.0">
          <children>
             <TextField fx:id="search" promptText="Browse Excursion" />
+            <ListView fx:id="listView" prefHeight="200.0" prefWidth="200.0" visible="false" />
             <Button mnemonicParsing="false" onAction="#searchButton" text="Search" />
             <Button mnemonicParsing="false" onAction="#bookingButton" text="My Bookings" />
             <Button mnemonicParsing="false" onAction="#logoutButton" text="Logout" />

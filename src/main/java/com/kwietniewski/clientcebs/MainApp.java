@@ -2,6 +2,7 @@ package com.kwietniewski.clientcebs;
 
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
+import java.util.ArrayList;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
@@ -17,12 +18,15 @@ import org.apache.http.impl.client.BasicResponseHandler;
 import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClients;
 import org.apache.http.impl.conn.PoolingHttpClientConnectionManager;
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
 public class MainApp extends Application{
     public static Stage window;
     public static CloseableHttpClient client;
+    public static JSONArray JSONResult;
+    //ResultController resultController = new ResultController();
     // Window change handler
     
     public void start(Stage window) throws IOException{
@@ -44,11 +48,42 @@ public class MainApp extends Application{
         
     }
     
+    
+    
     // Establishing connections
     
     public static void rememberClient(CloseableHttpClient localClient){
         MainApp.client = localClient;
         
+    }
+    
+    public static void rememberResultJSON(JSONArray localJSONREsult){
+        MainApp.JSONResult = localJSONREsult;
+        System.out.print("JSON sending succes");
+        
+        
+        
+    }
+    
+    public static ArrayList nameOfAllExcursions() throws JSONException{
+        ArrayList<JSONObject> contentsAsJsonObjects = new ArrayList<JSONObject>();
+        ArrayList<String> results = new ArrayList<String>();
+        
+        System.out.println(JSONResult.length());
+        int jsonLenght = JSONResult.length();
+        System.out.println("Lenght of json: " + jsonLenght);
+        for(int i=0; i<jsonLenght; i++) 
+        { 
+        JSONObject json = JSONResult.getJSONObject(i);
+        results.add(json.getString("name")); 
+        }
+        System.out.println(results);
+        return results;
+        
+        /*String name = JSONResult.getString("name");
+        System.out.println(name);
+        return name;
+        */
     }
     
     public CloseableHttpClient connect(){
@@ -91,10 +126,10 @@ public class MainApp extends Application{
 
     }
     
-    public void searchDataHandler(String phrase) throws IOException{
+    public void searchDataHandler(String phrase) throws IOException, UnsupportedEncodingException, JSONException{
         String url = "http://localhost:8181/api/excursions/findAll?"+"word="+phrase;
         getJSON(url);
-        
+        //resultController.populateListView();
     }
     
     // Data transfer
@@ -121,7 +156,7 @@ public class MainApp extends Application{
         return response;
     }
     
-    public HttpResponse getJSON(String url) throws UnsupportedEncodingException, IOException{
+    public HttpResponse getJSON(String url) throws UnsupportedEncodingException, IOException, JSONException{
         // GET
         HttpGet httpGet = new HttpGet(url);
         //StringEntity params = new StringEntity(json.toString());
@@ -131,11 +166,22 @@ public class MainApp extends Application{
         
         int statusCode = response.getStatusLine().getStatusCode();
         String responseString = new BasicResponseHandler().handleResponse(response);
+        
+        
+        //responseString = responseString.replace("[" , "");
+        //responseString = responseString.replace("]" , "");
         System.out.println("\nSending 'POST' JSON request to URL : " + httpGet.toString());
         System.out.println("Response Code : " + statusCode);
         System.out.println("Response value: " + response.toString());
         System.out.println("Response body: " + responseString);
-        System.out.println("Client " + client);
+        System.out.println("Client: " + client);
+        
+        JSONArray localJSONREsult = new JSONArray(responseString);
+        //JSONObject localJSONREsult = new JSONObject(responseString);
+        System.out.println("JSON to save: " + localJSONREsult.toString());
+        rememberResultJSON(localJSONREsult);
+        System.out.println("JSON manipulation success");
+        
         return response;
     }
     

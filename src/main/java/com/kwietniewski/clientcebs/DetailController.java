@@ -1,6 +1,5 @@
 package com.kwietniewski.clientcebs;
 
-import java.io.IOError;
 import java.io.IOException;
 import java.net.URL;
 import java.util.ResourceBundle;
@@ -17,11 +16,12 @@ public class DetailController implements Initializable {
     
     @Override
     public void initialize(URL url, ResourceBundle rb) {
-        // TODO
+
     }    
     
     @FXML
     private void backButton(ActionEvent event) throws IOException {
         model.changeScene(booking);
     }
+    
 }

@@ -3,11 +3,13 @@ package com.kwietniewski.clientcebs;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
+import java.util.Date;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
+import jdk.nashorn.internal.objects.Global;
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.ResponseHandler;
@@ -26,6 +28,7 @@ public class MainApp extends Application{
     public static Stage window;
     public static CloseableHttpClient client;
     public static JSONArray JSONResult;
+    public static int id;
     //ResultController resultController = new ResultController();
     // Window change handler
     
@@ -60,9 +63,7 @@ public class MainApp extends Application{
     public static void rememberResultJSON(JSONArray localJSONREsult){
         MainApp.JSONResult = localJSONREsult;
         System.out.print("JSON sending succes");
-        
-        
-        
+ 
     }
     
     public static ArrayList nameOfAllExcursions() throws JSONException{
@@ -118,6 +119,13 @@ public class MainApp extends Application{
         postJSON(url, json);
      
     }
+        
+    public void currentCustomer() throws IOException, JSONException{
+        String jsonResponse = getJSON("http://localhost:8181/api/customers/current?");
+        JSONObject json = new JSONObject(jsonResponse);
+        MainApp.id = json.getInt("id");
+        System.out.println(id);
+    }
     
     public void loginDataHandler(String email, String password) throws IOException{
         connect();
@@ -130,6 +138,24 @@ public class MainApp extends Application{
         String url = "http://localhost:8181/api/excursions/findAll?"+"word="+phrase;
         getJSON(url);
         //resultController.populateListView();
+    }
+    public void JSONArrayHandler(String responseString) throws JSONException{
+        JSONArray localJSONREsult = new JSONArray(responseString);
+        //JSONObject localJSONREsult = new JSONObject(responseString);
+        System.out.println("JSON to save: " + localJSONREsult.toString());
+        rememberResultJSON(localJSONREsult);
+        System.out.println("JSON manipulation success");
+    }
+    
+    public void book(int customerId, int seats, Long excursionId, String date) throws JSONException, IOException{
+        JSONObject json = new JSONObject();
+        json.put("customerId", customerId);
+        json.put("seats", seats);
+        json.put("excursionId", excursionId);
+        json.put("date", date);
+        String url = "http://localhost:8181/api/bookings/create?";
+        postJSON(url, json);
+        
     }
     
     // Data transfer
@@ -156,7 +182,7 @@ public class MainApp extends Application{
         return response;
     }
     
-    public HttpResponse getJSON(String url) throws UnsupportedEncodingException, IOException, JSONException{
+    public String getJSON(String url) throws UnsupportedEncodingException, IOException, JSONException{
         // GET
         HttpGet httpGet = new HttpGet(url);
         //StringEntity params = new StringEntity(json.toString());
@@ -176,13 +202,10 @@ public class MainApp extends Application{
         System.out.println("Response body: " + responseString);
         System.out.println("Client: " + client);
         
-        JSONArray localJSONREsult = new JSONArray(responseString);
-        //JSONObject localJSONREsult = new JSONObject(responseString);
-        System.out.println("JSON to save: " + localJSONREsult.toString());
-        rememberResultJSON(localJSONREsult);
-        System.out.println("JSON manipulation success");
-        
-        return response;
+        if(responseString.contains ("[")){
+        JSONArrayHandler(responseString);
+        }
+        return responseString;
     }
     
     public HttpResponse postPARAM(String url) throws IOException{

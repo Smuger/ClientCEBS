@@ -13,7 +13,7 @@
         <URL value="@/styles/register.css" />
     </stylesheets>
    <children>
-      <VBox prefHeight="200.0" prefWidth="100.0">
+      <VBox prefHeight="393.0" prefWidth="239.0">
          <children>
             <TextField fx:id="name" promptText="Full name" />
             <Label text="( Min 3 / Max 10 characters)" />
@@ -23,6 +23,7 @@
             <Label text="( Min 3 / Max 30 characters)" />
             <TextField fx:id="passwd2" promptText="Password" />
             <Label text="( Min 3 / Max 30 characters)" />
+            <CheckBox mnemonicParsing="false" onAction="#adminHandler" text="Are you a trip provider?" />
             <Text fx:id="error" strokeType="OUTSIDE" strokeWidth="0.0" />
             <Button mnemonicParsing="false" onAction="#registerButton" text="Register" />
             <Button mnemonicParsing="false" onAction="#backButton" text="back" />

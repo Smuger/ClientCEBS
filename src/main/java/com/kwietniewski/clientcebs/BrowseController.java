@@ -17,15 +17,17 @@ import javafx.scene.control.Slider;
 import javafx.scene.control.TextField;
 import javafx.scene.input.MouseEvent;
 import org.json.JSONException;
+import java.lang.Math;
+import java.time.LocalDate;
 
 
 public class BrowseController implements Initializable {
     
-
-    
     // Layouts
     private final static String booking = "/fxml/Booking.fxml";
     private final static String login = "/fxml/Login.fxml";
+    
+    public static int seats;
     
     @FXML
     private ListView listView;
@@ -57,13 +59,23 @@ public class BrowseController implements Initializable {
     
     @FXML 
     public void handleMouseClick(MouseEvent arg0) {
-    
         nameOfExcursion.setText(listView.getSelectionModel().getSelectedItem().toString());
         nameOfExcursion.setVisible(true);
         datePicker.setVisible(true);
         book.setVisible(true);
         slider.setVisible(true);
         labelSlider.setVisible(true);
+        
+    }
+    
+    @FXML
+    public void newTickedValue(MouseEvent event){
+        String ticketsNumber = Double.toString(slider.getValue());
+        ticketsNumber = ticketsNumber.replace(".0" , "");
+        System.out.println(ticketsNumber);
+        labelSlider.setText("Number of tickets: " + ticketsNumber);
+        seats = Integer.parseInt(ticketsNumber);
+        
     }
     
     MainApp model = new MainApp();
@@ -110,12 +122,26 @@ public class BrowseController implements Initializable {
         System.out.print("Populating List View ended");*/
         listView.setVisible(true);
         model.currentCustomer();
+        clearListView();
         populateListView();
+        
+    }
+    
+    @FXML
+    private void bookButton(ActionEvent event) throws JSONException, IOException{
+        String name = listView.getSelectionModel().getSelectedItem().toString();
+        LocalDate date = datePicker.getValue();
+        System.out.print("DATA: " + date);
+        model.book(name, seats, Long.MIN_VALUE, date);
         
     }
     
     private void populateListView() throws JSONException{
         listView.getItems().addAll(model.nameOfAllExcursions());
         listView.getSelectionModel().setSelectionMode(SelectionMode.SINGLE);
+    }
+    
+    private void clearListView(){
+        listView.getItems().clear();
     }
 }

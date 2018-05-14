@@ -10,9 +10,11 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
+import javax.sound.midi.SysexMessage;
 import jdk.nashorn.internal.objects.Global;
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
+import org.apache.http.client.HttpResponseException;
 import org.apache.http.client.ResponseHandler;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpPost;
@@ -159,7 +161,8 @@ public class MainApp extends Application{
         System.out.println("JSON manipulation success");
     }
     
-    public void book(String name, int seats, Long excursionId, LocalDate date) throws JSONException, IOException{
+    public int book(String name, int seats, LocalDate date) throws JSONException, IOException{
+        System.out.println("BOOKING STARTS: " + name + " " + seats + " " + date);
         currentExcursion(name);
         JSONObject json = new JSONObject();
         JSONObject trip = new JSONObject();
@@ -171,8 +174,13 @@ public class MainApp extends Application{
         String url = "http://localhost:8181/api/bookings/create?";
         System.out.println(json.toString());
         
-        postJSON(url, json);
-        
+        String reponse = postJSON(url, json);
+        System.out.println("RESPONSE" + reponse);
+        if (reponse == "error")
+        {
+            return 1;
+        }
+        return 0;
     }
     
     // Data transfer
@@ -188,32 +196,35 @@ public class MainApp extends Application{
         httpPost.setEntity(params);
         HttpResponse response = client.execute(httpPost);
         System.out.println(response);
-        //HttpResponse response = httpClient.execute(httpPost);
-        String responseString = new BasicResponseHandler().handleResponse(response);
-        int statusCode = response.getStatusLine().getStatusCode();
-        System.out.println("\nSending 'POST' JSON request to URL : " + httpPost.toString());
-	System.out.println("Post parameters : " + json.toString());
-        System.out.println("Response Code : " + statusCode);
-        System.out.println("Response value: " + response.toString());
-        System.out.println("Response body: " + responseString);
-        
+        try{
+            String responseString = new BasicResponseHandler().handleResponse(response);
+            int statusCode = response.getStatusLine().getStatusCode();
+            System.out.println("\nSending 'POST' JSON request to URL : " + httpPost.toString());
+            System.out.println("Post parameters : " + json.toString());
+            System.out.println("Response Code : " + statusCode);
+            System.out.println("Response value: " + response.toString());
+            System.out.println("Response body: " + responseString);
+       
         return responseString;
+        }
+        catch(HttpResponseException ex)
+        {
+            System.err.println("Double booking");
+        }
+        return "error";
     }
     
     public String getJSON(String url) throws UnsupportedEncodingException, IOException, JSONException{
         // GET
         HttpGet httpGet = new HttpGet(url);
-        //StringEntity params = new StringEntity(json.toString());
+
         httpGet.addHeader("content-type", "application/json");
-        //httpGet.setEntity(params);
+
         HttpResponse response = client.execute(httpGet);
         
         int statusCode = response.getStatusLine().getStatusCode();
         String responseString = new BasicResponseHandler().handleResponse(response);
-        
-        
-        //responseString = responseString.replace("[" , "");
-        //responseString = responseString.replace("]" , "");
+
         System.out.println("\nSending 'POST' JSON request to URL : " + httpGet.toString());
         System.out.println("Response Code : " + statusCode);
         System.out.println("Response value: " + response.toString());

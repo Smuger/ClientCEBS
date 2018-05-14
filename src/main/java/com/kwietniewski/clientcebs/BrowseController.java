@@ -19,6 +19,8 @@ import javafx.scene.input.MouseEvent;
 import org.json.JSONException;
 import java.lang.Math;
 import java.time.LocalDate;
+import org.apache.http.HttpException;
+import org.apache.http.client.HttpResponseException;
 
 
 public class BrowseController implements Initializable {
@@ -27,7 +29,7 @@ public class BrowseController implements Initializable {
     private final static String booking = "/fxml/Booking.fxml";
     private final static String login = "/fxml/Login.fxml";
     
-    public static int seats;
+    public static int seats = 1;
     
     @FXML
     private ListView listView;
@@ -37,6 +39,9 @@ public class BrowseController implements Initializable {
     
     @FXML
     private Label labelSlider;
+    
+    @FXML
+    private Label error;
     
     @FXML
     private DatePicker datePicker;
@@ -117,11 +122,9 @@ public class BrowseController implements Initializable {
         String phrase = search.getText().toString();
         System.out.println("Search phrase: " + phrase);
         model.searchDataHandler(phrase);
-        /*System.out.print("Populating List View");
-        resultController.populateListView();
-        System.out.print("Populating List View ended");*/
         listView.setVisible(true);
         model.currentCustomer();
+        error.setVisible(false);
         clearListView();
         populateListView();
         
@@ -132,8 +135,24 @@ public class BrowseController implements Initializable {
         String name = listView.getSelectionModel().getSelectedItem().toString();
         LocalDate date = datePicker.getValue();
         System.out.print("DATA: " + date);
-        model.book(name, seats, Long.MIN_VALUE, date);
+
+        int returnValue = model.book(name, seats, date);
+        listView.setVisible(false);
+        nameOfExcursion.setVisible(false);
+        datePicker.setVisible(false);
+        book.setVisible(false);
+        slider.setVisible(false);
+        labelSlider.setVisible(false);
+        error.setVisible(true);
         
+        if (returnValue == 1)
+        {
+            error.setText("This account has book this trip already");
+            error.setVisible(true);
+            System.out.println("Error double booking");
+        }
+        error.setText("Booking success");
+        error.setVisible(true);
     }
     
     private void populateListView() throws JSONException{

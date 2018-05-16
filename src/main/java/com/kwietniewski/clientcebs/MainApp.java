@@ -18,6 +18,7 @@ import org.apache.http.client.HttpResponseException;
 import org.apache.http.client.ResponseHandler;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpPost;
+import org.apache.http.client.methods.HttpDelete;
 import org.apache.http.entity.StringEntity;
 import org.apache.http.impl.client.BasicResponseHandler;
 import org.apache.http.impl.client.CloseableHttpClient;
@@ -33,6 +34,7 @@ public class MainApp extends Application{
     public static JSONArray JSONResult;
     public static int id;
     public static int exID;
+    public static String role;
     //ResultController resultController = new ResultController();
     // Window change handler
     
@@ -54,9 +56,7 @@ public class MainApp extends Application{
         window.getScene().setRoot(newroot);
         
     }
-    
-    
-    
+
     // Establishing connections
     
     public static void rememberClient(CloseableHttpClient localClient){
@@ -84,6 +84,23 @@ public class MainApp extends Application{
         }
         System.out.println(results);
         
+        return results;
+    }
+    
+    public static ArrayList nameOfBookedExcursions(){
+        ArrayList<String> results = new ArrayList<String>();
+        
+        System.out.println(JSONResult.length());
+        /*
+        int jsonLenght = JSONResult.length();
+        System.out.println("Lenght of json: " + jsonLenght);
+        for(int i=0; i<jsonLenght; i++) 
+        { 
+        JSONObject json = JSONResult.getJSONObject(i);
+        results.add(json.getString("name")); 
+        }
+        System.out.println(results);
+        */
         return results;
     }
     
@@ -119,13 +136,28 @@ public class MainApp extends Application{
      
     }
         
-    public void currentCustomer() throws IOException, JSONException{
+    public String currentCustomer() throws IOException, JSONException{
         String jsonResponse = getJSON("http://localhost:8181/api/customers/current?");
         JSONObject json = new JSONObject(jsonResponse);
+        System.out.println("CUSTOMER JSON DATA: " + json.toString());
         MainApp.id = json.getInt("id");
         System.out.println(id);
+        MainApp.role = json.getString("role");
+        System.out.println(role);
+        return role;
+        //roleHandle();
+        /*
+        MainApp.role = json.getString("role");
+        System.out.println(role);*/
     }
-    
+    /*
+    public void roleHandle() throws IOException, JSONException{
+        String jsonResponseRole = getJSON("http://localhost:8181/api/customers/fineOne?"+"id="+id);
+        JSONObject json = new JSONObject(jsonResponseRole);
+        MainApp.id = json.getInt("id");
+        
+    }
+    */
     public int currentExcursion(String name) throws IOException, JSONException{
         System.out.println(name);
         name = name.replaceAll(" ", "+");
@@ -176,11 +208,25 @@ public class MainApp extends Application{
         
         String reponse = postJSON(url, json);
         System.out.println("RESPONSE" + reponse);
-        if (reponse == "error")
+        if (reponse != "ok")
         {
             return 1;
         }
         return 0;
+    }
+    
+    public void delete(String name, LocalDate date) throws IOException, UnsupportedEncodingException, JSONException{
+        currentExcursion(name);
+        String url = "http://localhost:8181/api/trips/findOneByExcursionIdAndDate?"+"excursionId="+exID+"&"+"date="+date;
+        System.out.println(url);
+        String jsonResponse = getJSON(url);
+        JSONObject json = new JSONObject(jsonResponse);
+        int tripID = json.getInt("id");
+        System.out.println(tripID);
+        String url2 = "http://localhost:8181/api/trips/delete?"+"id="+tripID;
+        deletePARAM(url2);
+        
+
     }
     
     // Data transfer
@@ -196,22 +242,15 @@ public class MainApp extends Application{
         httpPost.setEntity(params);
         HttpResponse response = client.execute(httpPost);
         System.out.println(response);
-        try{
-            String responseString = new BasicResponseHandler().handleResponse(response);
-            int statusCode = response.getStatusLine().getStatusCode();
-            System.out.println("\nSending 'POST' JSON request to URL : " + httpPost.toString());
-            System.out.println("Post parameters : " + json.toString());
-            System.out.println("Response Code : " + statusCode);
-            System.out.println("Response value: " + response.toString());
-            System.out.println("Response body: " + responseString);
-       
-        return responseString;
-        }
-        catch(HttpResponseException ex)
-        {
-            System.err.println("Double booking");
-        }
-        return "error";
+
+        String responseString = new BasicResponseHandler().handleResponse(response);
+        int statusCode = response.getStatusLine().getStatusCode();
+        System.out.println("\nSending 'POST' JSON request to URL : " + httpPost.toString());
+        System.out.println("Post parameters : " + json.toString());
+        System.out.println("Response Code : " + statusCode);
+        System.out.println("Response value: " + response.toString());
+        System.out.println("Response body: " + responseString);
+        return "ok";
     }
     
     public String getJSON(String url) throws UnsupportedEncodingException, IOException, JSONException{
@@ -251,6 +290,14 @@ public class MainApp extends Application{
     public HttpResponse getPARAM(String url) throws IOException{
         HttpGet HttpGet = new HttpGet(url);
         HttpResponse response = client.execute(HttpGet);
+        int statusCode = response.getStatusLine().getStatusCode();
+      
+        return response;
+    }
+    
+    public HttpResponse deletePARAM(String url) throws IOException{
+        HttpDelete HttpDelete = new HttpDelete(url);
+        HttpResponse response = client.execute(HttpDelete);
         int statusCode = response.getStatusLine().getStatusCode();
       
         return response;

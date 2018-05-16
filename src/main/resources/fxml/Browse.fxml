@@ -23,7 +23,7 @@
                   <Slider fx:id="slider" blockIncrement="1.0" majorTickUnit="1.0" max="10.0" min="1.0" minorTickCount="0" onMouseClicked="#newTickedValue" showTickLabels="true" showTickMarks="true" snapToTicks="true" value="1.0" visible="false" />
                   <Label fx:id="error" visible="false" />
                   <Button fx:id="book" mnemonicParsing="false" onAction="#bookButton" text="Book" visible="false" />
-                  <Button mnemonicParsing="false" text="Delete" visible="false" />
+                  <Button fx:id="delete" mnemonicParsing="false" onAction="#deleteHandle" text="[ADMIN] Delete" visible="false" />
                </children>
             </VBox>
             <VBox prefHeight="200.0" prefWidth="100.0">

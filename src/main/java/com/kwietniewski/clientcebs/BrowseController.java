@@ -1,6 +1,7 @@
 package com.kwietniewski.clientcebs;
 
 import java.io.IOException;
+import java.io.UnsupportedEncodingException;
 import java.net.MalformedURLException;
 import java.net.ProtocolException;
 import java.net.URL;
@@ -19,6 +20,7 @@ import javafx.scene.input.MouseEvent;
 import org.json.JSONException;
 import java.lang.Math;
 import java.time.LocalDate;
+import java.util.ArrayList;
 import org.apache.http.HttpException;
 import org.apache.http.client.HttpResponseException;
 
@@ -56,6 +58,9 @@ public class BrowseController implements Initializable {
     private Button myBookings;
     
     @FXML
+    private Button delete;
+    
+    @FXML
     private TextField search;
     
     @FXML
@@ -63,13 +68,22 @@ public class BrowseController implements Initializable {
 
     
     @FXML 
-    public void handleMouseClick(MouseEvent arg0) {
+    public void handleMouseClick(MouseEvent arg0) throws IOException, JSONException {
         nameOfExcursion.setText(listView.getSelectionModel().getSelectedItem().toString());
         nameOfExcursion.setVisible(true);
         datePicker.setVisible(true);
         book.setVisible(true);
         slider.setVisible(true);
         labelSlider.setVisible(true);
+        String role = model.currentCustomer();
+        System.out.println(role);
+        if (role.equals("ADMIN")){
+            System.out.println("This user is an Admin");
+            delete.setVisible(true);
+        }
+        else{
+            System.out.println("This user is not an Admin");
+        }
         
     }
     
@@ -123,10 +137,11 @@ public class BrowseController implements Initializable {
         System.out.println("Search phrase: " + phrase);
         model.searchDataHandler(phrase);
         listView.setVisible(true);
-        model.currentCustomer();
+        
         error.setVisible(false);
         clearListView();
-        populateListView();
+        ArrayList allExcursionsNames = model.nameOfAllExcursions();
+        populateListView(allExcursionsNames);
         
     }
     
@@ -144,6 +159,7 @@ public class BrowseController implements Initializable {
         slider.setVisible(false);
         labelSlider.setVisible(false);
         error.setVisible(true);
+        delete.setVisible(false);
         
         if (returnValue == 1)
         {
@@ -155,8 +171,17 @@ public class BrowseController implements Initializable {
         error.setVisible(true);
     }
     
-    private void populateListView() throws JSONException{
-        listView.getItems().addAll(model.nameOfAllExcursions());
+    @FXML
+    private void deleteHandle(ActionEvent event) throws IOException, UnsupportedEncodingException, JSONException{
+        String name = listView.getSelectionModel().getSelectedItem().toString();
+        LocalDate date = datePicker.getValue();
+        System.out.print("DATA: " + date);
+        model.delete(name, date);
+        System.out.println("Trip delete - DELETE");
+    }
+    
+    private void populateListView(ArrayList allExcursionsNames) throws JSONException{
+        listView.getItems().addAll(allExcursionsNames);
         listView.getSelectionModel().setSelectionMode(SelectionMode.SINGLE);
     }
     

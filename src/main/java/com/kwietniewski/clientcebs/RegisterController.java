@@ -47,17 +47,15 @@ public class RegisterController implements Initializable {
     @FXML
     private void registerButton(ActionEvent event) throws IOException{
         try{
-            System.out.println("Get register data");
+            
             model.registerDataHandler(name.getText(), email.getText(), passwd1.getText(), 1, user);
-            System.out.println("change scene");
+            
             model.changeScene(login);
         }
         catch (Exception ex){
-            System.err.println(ex);
+           
             error.setText("One of textfields is empty");
-            System.err.println("Name: " + name.getText()+ " " + 
-                    "Email: " + email.getText() + " " + 
-                    "Password: " + passwd1.getText());
+          
         }
     }
 }

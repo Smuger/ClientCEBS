@@ -1,6 +1,7 @@
 package com.kwietniewski.clientcebs;
 
 import java.io.IOException;
+import java.io.UnsupportedEncodingException;
 import java.net.MalformedURLException;
 import java.net.ProtocolException;
 import java.net.URL;
@@ -19,6 +20,9 @@ import javafx.scene.input.MouseEvent;
 import org.json.JSONException;
 import java.lang.Math;
 import java.time.LocalDate;
+import java.util.ArrayList;
+import org.apache.http.HttpException;
+import org.apache.http.client.HttpResponseException;
 
 
 public class BrowseController implements Initializable {
@@ -27,7 +31,7 @@ public class BrowseController implements Initializable {
     private final static String booking = "/fxml/Booking.fxml";
     private final static String login = "/fxml/Login.fxml";
     
-    public static int seats;
+    public static int seats = 1;
     
     @FXML
     private ListView listView;
@@ -37,6 +41,9 @@ public class BrowseController implements Initializable {
     
     @FXML
     private Label labelSlider;
+    
+    @FXML
+    private Label error;
     
     @FXML
     private DatePicker datePicker;
@@ -51,6 +58,9 @@ public class BrowseController implements Initializable {
     private Button myBookings;
     
     @FXML
+    private Button delete;
+    
+    @FXML
     private TextField search;
     
     @FXML
@@ -58,13 +68,22 @@ public class BrowseController implements Initializable {
 
     
     @FXML 
-    public void handleMouseClick(MouseEvent arg0) {
+    public void handleMouseClick(MouseEvent arg0) throws IOException, JSONException {
         nameOfExcursion.setText(listView.getSelectionModel().getSelectedItem().toString());
         nameOfExcursion.setVisible(true);
         datePicker.setVisible(true);
         book.setVisible(true);
         slider.setVisible(true);
         labelSlider.setVisible(true);
+        String role = model.currentCustomer();
+
+        if (role.equals("ADMIN")){
+         
+            delete.setVisible(true);
+        }
+        else{
+            
+        }
         
     }
     
@@ -72,7 +91,7 @@ public class BrowseController implements Initializable {
     public void newTickedValue(MouseEvent event){
         String ticketsNumber = Double.toString(slider.getValue());
         ticketsNumber = ticketsNumber.replace(".0" , "");
-        System.out.println(ticketsNumber);
+      
         labelSlider.setText("Number of tickets: " + ticketsNumber);
         seats = Integer.parseInt(ticketsNumber);
         
@@ -115,29 +134,58 @@ public class BrowseController implements Initializable {
     @FXML
     private void searchButton(ActionEvent event) throws IOException, ProtocolException, MalformedURLException, JSONException{
         String phrase = search.getText().toString();
-        System.out.println("Search phrase: " + phrase);
-        model.searchDataHandler(phrase);
-        /*System.out.print("Populating List View");
-        resultController.populateListView();
-        System.out.print("Populating List View ended");*/
-        listView.setVisible(true);
-        model.currentCustomer();
-        clearListView();
-        populateListView();
         
+        model.searchDataHandler(phrase);
+        System.out.println("SEARCH FOR: " + phrase);
+        
+        listView.setVisible(true);
+        error.setVisible(false);
+        
+        clearListView();
+        
+        System.out.println("GET NAMES OF EXCURSIONS");
+        ArrayList allExcursionsNames = model.nameOfAllExcursions();
+        populateListView(allExcursionsNames);
+        System.out.println("LISTVIEW POPULATED");
     }
     
     @FXML
     private void bookButton(ActionEvent event) throws JSONException, IOException{
         String name = listView.getSelectionModel().getSelectedItem().toString();
         LocalDate date = datePicker.getValue();
-        System.out.print("DATA: " + date);
-        model.book(name, seats, Long.MIN_VALUE, date);
+       
+
+        int returnValue = model.book(name, seats, date);
+        listView.setVisible(false);
+        nameOfExcursion.setVisible(false);
+        datePicker.setVisible(false);
+        book.setVisible(false);
+        slider.setVisible(false);
+        labelSlider.setVisible(false);
+        error.setVisible(true);
+        delete.setVisible(false);
         
+        if (returnValue == 1)
+        {
+            error.setText("This account has book this trip already");
+            error.setVisible(true);
+           
+        }
+        error.setText("Booking success");
+        error.setVisible(true);
     }
     
-    private void populateListView() throws JSONException{
-        listView.getItems().addAll(model.nameOfAllExcursions());
+    @FXML
+    private void deleteHandle(ActionEvent event) throws IOException, UnsupportedEncodingException, JSONException{
+        String name = listView.getSelectionModel().getSelectedItem().toString();
+        LocalDate date = datePicker.getValue();
+       
+        model.delete(name, date);
+  
+    }
+    
+    private void populateListView(ArrayList allExcursionsNames) throws JSONException{
+        listView.getItems().addAll(allExcursionsNames);
         listView.getSelectionModel().setSelectionMode(SelectionMode.SINGLE);
     }
     

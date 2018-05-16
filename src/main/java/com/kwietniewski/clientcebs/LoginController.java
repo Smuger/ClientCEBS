@@ -45,7 +45,7 @@ public class LoginController implements Initializable {
         }
         catch(Exception ex){
             error.setText("Server Down");
-            System.err.println(ex);
+
         }
     }
 }

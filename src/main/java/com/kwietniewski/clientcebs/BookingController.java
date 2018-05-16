@@ -45,7 +45,7 @@ public class BookingController implements Initializable {
     }
     
     @FXML
-    private void refreshHandler(ActionEvent event){
+    private void refreshButton(ActionEvent event){
         clearListView();
         ArrayList allExcursionsNames = model.nameOfBookedExcursions();
     }

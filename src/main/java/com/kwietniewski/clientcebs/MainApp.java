@@ -66,7 +66,6 @@ public class MainApp extends Application{
     
     public static void rememberResultJSON(JSONArray localJSONREsult){
         MainApp.JSONResult = localJSONREsult;
-        System.out.print("JSON sending succes");
  
     }
     
@@ -74,15 +73,15 @@ public class MainApp extends Application{
         //ArrayList<JSONObject> contentsAsJsonObjects = new ArrayList<JSONObject>();
         ArrayList<String> results = new ArrayList<String>();
         
-        System.out.println(JSONResult.length());
+       
         int jsonLenght = JSONResult.length();
-        System.out.println("Lenght of json: " + jsonLenght);
+        
         for(int i=0; i<jsonLenght; i++) 
         { 
         JSONObject json = JSONResult.getJSONObject(i);
         results.add(json.getString("name")); 
         }
-        System.out.println(results);
+       System.out.println("ALL NAMES ADDED");
         
         return results;
     }
@@ -90,7 +89,7 @@ public class MainApp extends Application{
     public static ArrayList nameOfBookedExcursions(){
         ArrayList<String> results = new ArrayList<String>();
         
-        System.out.println(JSONResult.length());
+      
         /*
         int jsonLenght = JSONResult.length();
         System.out.println("Lenght of json: " + jsonLenght);
@@ -109,14 +108,9 @@ public class MainApp extends Application{
             PoolingHttpClientConnectionManager connManager = new PoolingHttpClientConnectionManager();
             CloseableHttpClient client = HttpClients.custom()
             .setConnectionManager(connManager).build();
-            System.out.println("New connection: " + client);
-            rememberClient(client); 
+                       rememberClient(client); 
+            System.out.println("CLIENT CREATED " + client);
         }
-        
-        else{
-            System.err.println("User already login");
-        }
-        
         return client;
     }
     
@@ -130,7 +124,7 @@ public class MainApp extends Application{
         json.put("cabineNumber", cabineNumber);  
         json.put("role", role);   
         String url = "http://localhost:8181/api/customers/register?";
-        System.out.println("Register JSON created, sending to server");
+        
         connect();
         postJSON(url, json);
      
@@ -139,11 +133,11 @@ public class MainApp extends Application{
     public String currentCustomer() throws IOException, JSONException{
         String jsonResponse = getJSON("http://localhost:8181/api/customers/current?");
         JSONObject json = new JSONObject(jsonResponse);
-        System.out.println("CUSTOMER JSON DATA: " + json.toString());
+        
         MainApp.id = json.getInt("id");
-        System.out.println(id);
+       
         MainApp.role = json.getString("role");
-        System.out.println(role);
+       
         return role;
         //roleHandle();
         /*
@@ -159,7 +153,7 @@ public class MainApp extends Application{
     }
     */
     public int currentExcursion(String name) throws IOException, JSONException{
-        System.out.println(name);
+       
         name = name.replaceAll(" ", "+");
         String jsonResponse = getJSON("http://localhost:8181/api/excursions/findAll?" + "word="+name);
 
@@ -167,7 +161,7 @@ public class MainApp extends Application{
 
         JSONObject json = new JSONObject(jsonResponse);
         MainApp.exID = json.getInt("id");
-        System.out.println(exID);
+        
         return exID;
     }
     
@@ -188,13 +182,13 @@ public class MainApp extends Application{
     public void JSONArrayHandler(String responseString) throws JSONException{
         JSONArray localJSONREsult = new JSONArray(responseString);
         //JSONObject localJSONREsult = new JSONObject(responseString);
-        System.out.println("JSON to save: " + localJSONREsult.toString());
+       
         rememberResultJSON(localJSONREsult);
-        System.out.println("JSON manipulation success");
+       
     }
     
     public int book(String name, int seats, LocalDate date) throws JSONException, IOException{
-        System.out.println("BOOKING STARTS: " + name + " " + seats + " " + date);
+       
         currentExcursion(name);
         JSONObject json = new JSONObject();
         JSONObject trip = new JSONObject();
@@ -204,10 +198,10 @@ public class MainApp extends Application{
         json.put("seats", seats);
         json.put("trip", trip);
         String url = "http://localhost:8181/api/bookings/create?";
-        System.out.println(json.toString());
+       
         
         String reponse = postJSON(url, json);
-        System.out.println("RESPONSE" + reponse);
+       
         if (reponse != "ok")
         {
             return 1;
@@ -218,11 +212,11 @@ public class MainApp extends Application{
     public void delete(String name, LocalDate date) throws IOException, UnsupportedEncodingException, JSONException{
         currentExcursion(name);
         String url = "http://localhost:8181/api/trips/findOneByExcursionIdAndDate?"+"excursionId="+exID+"&"+"date="+date;
-        System.out.println(url);
+       
         String jsonResponse = getJSON(url);
         JSONObject json = new JSONObject(jsonResponse);
         int tripID = json.getInt("id");
-        System.out.println(tripID);
+       
         String url2 = "http://localhost:8181/api/trips/delete?"+"id="+tripID;
         deletePARAM(url2);
         
@@ -233,56 +227,74 @@ public class MainApp extends Application{
     
     public String postJSON(String url, JSONObject json) throws IOException{
         // POST
-        System.out.println("as a client: " + client);
+        
+        System.out.println("DATA TO SEND");
+        System.out.println(json.toString());
+        
         HttpPost httpPost = new HttpPost(url);
-        System.out.println(httpPost);
+        System.out.println("HTTP POST ESTABLISHED");
+        
         StringEntity params = new StringEntity(json.toString());
-        System.out.println(params);
+        System.out.print("DATA TRANSFER ");
+        
         httpPost.addHeader("content-type", "application/json");
         httpPost.setEntity(params);
+        System.out.println("| DATA TYPE JSON");
+        
         HttpResponse response = client.execute(httpPost);
         System.out.println(response);
-
-        String responseString = new BasicResponseHandler().handleResponse(response);
+        System.out.println("RESPONSE RECEIVED");
+        
         int statusCode = response.getStatusLine().getStatusCode();
-        System.out.println("\nSending 'POST' JSON request to URL : " + httpPost.toString());
-        System.out.println("Post parameters : " + json.toString());
-        System.out.println("Response Code : " + statusCode);
-        System.out.println("Response value: " + response.toString());
-        System.out.println("Response body: " + responseString);
-        return "ok";
+        System.out.println("STATUS CODE: " + statusCode);
+        
+        String responseString = new BasicResponseHandler().handleResponse(response);
+        System.out.println("CONVERT RESPONSE TO STRING");
+      
+        return responseString;
     }
     
     public String getJSON(String url) throws UnsupportedEncodingException, IOException, JSONException{
         // GET
-        HttpGet httpGet = new HttpGet(url);
+        
+        System.out.println("DATA TO SEND IN URL");
+        
+        HttpGet HttpGet = new HttpGet(url);
+        System.out.println("HTTP GET ESTABLISHED");
 
-        httpGet.addHeader("content-type", "application/json");
-
-        HttpResponse response = client.execute(httpGet);
+        //HttpGet.addHeader("content-type", "application/json");
+        
+        HttpResponse response = client.execute(HttpGet);
+        //System.out.println(response);
+        System.out.println("RESPONSE RECEIVED");
         
         int statusCode = response.getStatusLine().getStatusCode();
-        String responseString = new BasicResponseHandler().handleResponse(response);
-
-        System.out.println("\nSending 'POST' JSON request to URL : " + httpGet.toString());
-        System.out.println("Response Code : " + statusCode);
-        System.out.println("Response value: " + response.toString());
-        System.out.println("Response body: " + responseString);
-        System.out.println("Client: " + client);
+        System.out.println("STATUS CODE: " + statusCode);
         
-        if(responseString.contains ("[")){
-        JSONArrayHandler(responseString);
+        String responseString = new BasicResponseHandler().handleResponse(response);
+        System.out.println("CONVERT RESPONSE TO STRING");
+        
+        if (responseString.contains("[")){
+            
+            JSONArrayHandler(responseString);
         }
+      
         return responseString;
     }
     
     public HttpResponse postPARAM(String url) throws IOException{
+        
         HttpPost httpPost = new HttpPost(url);
-        System.out.println(httpPost);
-        System.out.println(client);
+        System.out.println("HTTP POST ESTABLISHED");
+        
+        System.out.print("DATA TRANSFER ");
+        System.out.println("| DATA TYPE JSON");
+        
         HttpResponse response = client.execute(httpPost);
+        System.out.println("RESPONSE RECEIVED");
+        
         int statusCode = response.getStatusLine().getStatusCode();
-        System.out.println(statusCode);
+
         
         return response;
     }

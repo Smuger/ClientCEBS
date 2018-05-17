@@ -19,6 +19,7 @@ import org.apache.http.client.ResponseHandler;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.client.methods.HttpDelete;
+import org.apache.http.client.methods.HttpPut;
 import org.apache.http.entity.StringEntity;
 import org.apache.http.impl.client.BasicResponseHandler;
 import org.apache.http.impl.client.CloseableHttpClient;
@@ -35,7 +36,10 @@ public class MainApp extends Application{
     public static JSONArray JSONResultBooking;
     public static int id;
     public static int exID;
+    public static String CurrentUsername;
+    public static String CurrentUseremail;
     public static String role;
+    public static JSONObject BookedExcursionsNamesID = new JSONObject();
     //ResultController resultController = new ResultController();
     // Window change handler
     
@@ -95,16 +99,28 @@ public class MainApp extends Application{
     public static ArrayList nameOfBookedExcursions() throws JSONException{
         ArrayList<String> results = new ArrayList<String>();
         String simpleExName;
+        int simpleExId;
         int jsonLenght = JSONResultBooking.length();
         System.out.println("Lenght of json: " + jsonLenght);
         for(int i=0; i<jsonLenght; i++) 
         { 
         JSONObject json = JSONResultBooking.getJSONObject(i);
-        simpleExName = (json.getJSONObject("trips").getJSONObject("excursion").getString("name"));
-                
+        simpleExName = json.getJSONObject("trips").getJSONObject("excursion").getString("name");
+        simpleExId = json.getInt("id");
+        
+        System.out.println("NAME: " + simpleExName);
+        System.out.println("ID: " + simpleExId);
+
+        JSONObject idExName = new JSONObject();
+        idExName.put("id", simpleExId);
+        BookedExcursionsNamesID.put(simpleExName, idExName);
+
+
         results.add(simpleExName); 
         }
+        System.out.println(BookedExcursionsNamesID.toString() + "SAVED BOOKED DATA");
         System.out.println(results);
+        
    
         return results;
     }
@@ -135,6 +151,19 @@ public class MainApp extends Application{
         postJSON(url, json);
      
     }
+    
+    public void updateDataHandler(String name, String email, String password, int cabineNumber, String role) throws JSONException, IOException{
+        String url = "http://localhost:8181/api/customers/update?"+"id="+id;
+        JSONObject json = new JSONObject();
+        json.put("name", name);
+        json.put("email", email);  
+        json.put("password", password);   
+        json.put("cabineNumber", cabineNumber);  
+        json.put("role", role);   
+        
+        putPARAM(url, json);
+     
+    }
         
     public String currentCustomer() throws IOException, JSONException{
         String jsonResponse = getJSON("http://localhost:8181/api/customers/current?");
@@ -143,7 +172,8 @@ public class MainApp extends Application{
         MainApp.id = json.getInt("id");
         System.out.println("CURRENT USER ID: " + id);
         MainApp.role = json.getString("role");
-       
+        MainApp.CurrentUsername = json.getString("name");
+        MainApp.CurrentUseremail = json.getString("email");
         return role;
         //roleHandle();
         /*
@@ -233,6 +263,13 @@ public class MainApp extends Application{
         deletePARAM(url2);
         
 
+    }
+    
+    public void deleteBooking(String name) throws JSONException, IOException{
+        int bookingID = BookedExcursionsNamesID.getJSONObject(name).getInt("id");
+        String url = "http://localhost:8181/api/bookings/delete?"+"id="+bookingID;
+        deletePARAM(url);
+        
     }
     
     // Data transfer
@@ -336,6 +373,33 @@ public class MainApp extends Application{
         System.out.println("STATUS CODE: " + statusCode);
       
         return response;
+    }
+    
+    public String putPARAM(String url, JSONObject json) throws IOException{
+        System.out.println("DATA TO SEND");
+        System.out.println(json.toString());
+        
+        HttpPut HttpPut = new HttpPut(url);
+        System.out.println("HTTP POST ESTABLISHED");
+        
+        StringEntity params = new StringEntity(json.toString());
+        System.out.print("DATA TRANSFER ");
+        
+        HttpPut.addHeader("content-type", "application/json");
+        HttpPut.setEntity(params);
+        System.out.println("| DATA TYPE JSON");
+        
+        HttpResponse response = client.execute(HttpPut);
+        System.out.println(response);
+        System.out.println("RESPONSE RECEIVED");
+        
+        int statusCode = response.getStatusLine().getStatusCode();
+        System.out.println("STATUS CODE: " + statusCode);
+        
+        String responseString = new BasicResponseHandler().handleResponse(response);
+        System.out.println("CONVERT RESPONSE TO STRING");
+      
+        return responseString;
     }
     
     public void disconnect() throws IOException{

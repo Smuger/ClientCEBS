@@ -7,13 +7,22 @@
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 
-<AnchorPane id="AnchorPane" prefHeight="400.0" prefWidth="600.0" styleClass="mainFxmlClass" xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/8" fx:controller="com.kwietniewski.clientcebs.DetailController">
+<AnchorPane id="AnchorPane" prefHeight="400.0" prefWidth="600.0" styleClass="mainFxmlClass" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.kwietniewski.clientcebs.DetailController">
     <stylesheets>
         <URL value="@/styles/detail.css" />
     </stylesheets>
    <children>
-      <VBox prefHeight="200.0" prefWidth="100.0">
+      <VBox prefHeight="342.0" prefWidth="351.0">
          <children>
+            <Label text="Full name" />
+            <TextField fx:id="name" onMouseClicked="#handleMouseClick" promptText="Full name" />
+            <Label text="Email" />
+            <TextField fx:id="email" onMouseClicked="#handleMouseClick" promptText="Email" />
+            <Label text="Password (Please provide it to change data)" />
+            <TextField fx:id="password1" promptText="Password" />
+            <TextField fx:id="password2" promptText="Password" />
+            <Label fx:id="error" />
+            <Button mnemonicParsing="false" onAction="#updateButton" text="Change" />
             <Button mnemonicParsing="false" onAction="#backButton" text="Back" />
          </children>
       </VBox>

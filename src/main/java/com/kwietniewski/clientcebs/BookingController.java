@@ -12,6 +12,7 @@ import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
 import javafx.scene.control.ListView;
 import javafx.scene.control.SelectionMode;
+import javafx.scene.input.MouseEvent;
 import org.json.JSONException;
 
 
@@ -46,14 +47,22 @@ public class BookingController implements Initializable {
     
     @FXML
     private void refreshButton(ActionEvent event) throws JSONException, IOException{
-        model.currentCustomer();
+        try{
+            model.currentCustomer();
+        }
+        catch(Exception ex){
+            System.err.println("ERROR WHILE UPDATING CURRENT CUSTOMER " + ex);
+        }
         clearListView();
         model.searchBookingHandler();
         ArrayList allBookedExcursionsNames = model.nameOfBookedExcursions();
-        populateListView(allBookedExcursionsNames);
-        
-        
-        
+        populateListView(allBookedExcursionsNames);  
+    }
+    
+    @FXML
+    private void deleteButton(ActionEvent event) throws JSONException, IOException{
+        String name = listView.getSelectionModel().getSelectedItem().toString();
+        model.deleteBooking(name);
     }
     
     private void populateListView(ArrayList allExcursionsNames) throws JSONException{

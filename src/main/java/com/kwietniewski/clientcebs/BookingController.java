@@ -45,9 +45,15 @@ public class BookingController implements Initializable {
     }
     
     @FXML
-    private void refreshButton(ActionEvent event){
+    private void refreshButton(ActionEvent event) throws JSONException, IOException{
+        model.currentCustomer();
         clearListView();
-        ArrayList allExcursionsNames = model.nameOfBookedExcursions();
+        model.searchBookingHandler();
+        ArrayList allBookedExcursionsNames = model.nameOfBookedExcursions();
+        populateListView(allBookedExcursionsNames);
+        
+        
+        
     }
     
     private void populateListView(ArrayList allExcursionsNames) throws JSONException{

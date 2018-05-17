@@ -32,6 +32,7 @@ public class MainApp extends Application{
     public static Stage window;
     public static CloseableHttpClient client;
     public static JSONArray JSONResult;
+    public static JSONArray JSONResultBooking;
     public static int id;
     public static int exID;
     public static String role;
@@ -69,6 +70,11 @@ public class MainApp extends Application{
  
     }
     
+    public static void rememberResultJSONBooking(JSONArray localJSONREsult){
+        MainApp.JSONResultBooking = localJSONREsult;
+ 
+    }
+    
     public static ArrayList nameOfAllExcursions() throws JSONException{
         //ArrayList<JSONObject> contentsAsJsonObjects = new ArrayList<JSONObject>();
         ArrayList<String> results = new ArrayList<String>();
@@ -86,20 +92,20 @@ public class MainApp extends Application{
         return results;
     }
     
-    public static ArrayList nameOfBookedExcursions(){
+    public static ArrayList nameOfBookedExcursions() throws JSONException{
         ArrayList<String> results = new ArrayList<String>();
-        
-      
-        /*
-        int jsonLenght = JSONResult.length();
+        String simpleExName;
+        int jsonLenght = JSONResultBooking.length();
         System.out.println("Lenght of json: " + jsonLenght);
         for(int i=0; i<jsonLenght; i++) 
         { 
-        JSONObject json = JSONResult.getJSONObject(i);
-        results.add(json.getString("name")); 
+        JSONObject json = JSONResultBooking.getJSONObject(i);
+        simpleExName = (json.getJSONObject("trips").getJSONObject("excursion").getString("name"));
+                
+        results.add(simpleExName); 
         }
         System.out.println(results);
-        */
+   
         return results;
     }
     
@@ -135,7 +141,7 @@ public class MainApp extends Application{
         JSONObject json = new JSONObject(jsonResponse);
         
         MainApp.id = json.getInt("id");
-       
+        System.out.println("CURRENT USER ID: " + id);
         MainApp.role = json.getString("role");
        
         return role;
@@ -175,16 +181,21 @@ public class MainApp extends Application{
     public void searchDataHandler(String phrase) throws IOException, UnsupportedEncodingException, JSONException{
         phrase = phrase.replaceAll(" ", "+");
         String url = "http://localhost:8181/api/excursions/findAll?"+"word="+phrase;
-        getJSON(url);
+        String responseString = getJSON(url);
+
+        JSONArray localJSONREsult = new JSONArray(responseString);
+        rememberResultJSON(localJSONREsult);
         //resultController.populateListView();
     }
     
-    public void JSONArrayHandler(String responseString) throws JSONException{
+    public void searchBookingHandler() throws IOException, UnsupportedEncodingException, JSONException{
+ 
+        String url = "http://localhost:8181/api/bookings/findAllByCustomerId?"+"id="+id;
+        String responseString = getJSON(url);
+        System.out.println("BOOKING RESULTS: " + responseString);
         JSONArray localJSONREsult = new JSONArray(responseString);
-        //JSONObject localJSONREsult = new JSONObject(responseString);
-       
-        rememberResultJSON(localJSONREsult);
-       
+        rememberResultJSONBooking(localJSONREsult);
+        //resultController.populateListView();
     }
     
     public int book(String name, int seats, LocalDate date) throws JSONException, IOException{
@@ -201,11 +212,12 @@ public class MainApp extends Application{
        
         
         String reponse = postJSON(url, json);
-       
+       /*
         if (reponse != "ok")
         {
             return 1;
         }
+*/
         return 0;
     }
     
@@ -273,12 +285,7 @@ public class MainApp extends Application{
         
         String responseString = new BasicResponseHandler().handleResponse(response);
         System.out.println("CONVERT RESPONSE TO STRING");
-        
-        if (responseString.contains("[")){
-            
-            JSONArrayHandler(responseString);
-        }
-      
+           
         return responseString;
     }
     
@@ -294,23 +301,39 @@ public class MainApp extends Application{
         System.out.println("RESPONSE RECEIVED");
         
         int statusCode = response.getStatusLine().getStatusCode();
-
+        System.out.println("STATUS CODE: " + statusCode);
         
         return response;
     }
     
     public HttpResponse getPARAM(String url) throws IOException{
         HttpGet HttpGet = new HttpGet(url);
+        System.out.println("HTTP GET ESTABLISHED");
+        
+        System.out.print("DATA TRANSFER ");
+        System.out.println("| DATA TYPE JSON");
+        
         HttpResponse response = client.execute(HttpGet);
+        System.out.println("RESPONSE RECEIVED");
+        
         int statusCode = response.getStatusLine().getStatusCode();
+        System.out.println("STATUS CODE: " + statusCode);
       
         return response;
     }
     
     public HttpResponse deletePARAM(String url) throws IOException{
         HttpDelete HttpDelete = new HttpDelete(url);
+        System.out.println("HTTP DELETE ESTABLISHED");
+        
+        System.out.print("DATA TRANSFER ");
+        System.out.println("| DATA TYPE JSON");
+        
         HttpResponse response = client.execute(HttpDelete);
+        System.out.println("RESPONSE RECEIVED");
+        
         int statusCode = response.getStatusLine().getStatusCode();
+        System.out.println("STATUS CODE: " + statusCode);
       
         return response;
     }

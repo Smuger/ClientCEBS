@@ -7,27 +7,35 @@
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 
-<AnchorPane id="AnchorPane" prefHeight="400.0" prefWidth="600.0" styleClass="cruiseexcursionbookingsystem.controllers.mainFxmlClass" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.kwietniewski.clientcebs.BookingController">
+<AnchorPane id="AnchorPane" prefHeight="400.0" prefWidth="600.0" style="-fx-background-color: a5ccda;" styleClass="cruiseexcursionbookingsystem.controllers.mainFxmlClass" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.kwietniewski.clientcebs.BookingController">
     <stylesheets>
         <URL value="@/styles/booking.css" />
     </stylesheets>
     <children>
-        <HBox prefHeight="200.0" prefWidth="300.0">
-            <children>
-                <VBox prefHeight="200.0" prefWidth="200.0">
-                    <children>
-                        <ListView fx:id="listView" prefHeight="200.0" prefWidth="200.0" />
-                        <Button fx:id="refresh" mnemonicParsing="false" onAction="#refreshButton" text="Refresh" />
-                        <Button mnemonicParsing="false" onAction="#detailButton" text="Account details" />
-                        <Button mnemonicParsing="false" onAction="#backButton" text="Back" />
-                    </children>
-                </VBox>
-                <VBox prefHeight="200.0" prefWidth="100.0">
-                    <children>
-                        <Button mnemonicParsing="false" onAction="#deleteButton" text="Delete" />
-                    </children>
-                </VBox>
-            </children>
-        </HBox>
+      <BorderPane prefHeight="200.0" prefWidth="200.0">
+         <center>
+            <AnchorPane prefHeight="200.0" prefWidth="200.0" BorderPane.alignment="CENTER">
+               <children>
+                    <HBox prefHeight="394.0" prefWidth="593.0">
+                        <children>
+                            <VBox prefHeight="394.0" prefWidth="539.0">
+                                <children>
+                                    <ListView fx:id="listView" prefHeight="200.0" prefWidth="200.0" />
+                                    <Button fx:id="refresh" mnemonicParsing="false" onAction="#refreshButton" text="Refresh" />
+                                    <Button mnemonicParsing="false" onAction="#detailButton" text="Account details" />
+                                    <Button mnemonicParsing="false" onAction="#backButton" text="Back" />
+                                </children>
+                            </VBox>
+                            <VBox prefHeight="394.0" prefWidth="101.0">
+                                <children>
+                                    <Button mnemonicParsing="false" onAction="#deleteButton" text="Delete" />
+                                </children>
+                            </VBox>
+                        </children>
+                    </HBox>
+               </children>
+            </AnchorPane>
+         </center>
+      </BorderPane>
     </children>
 </AnchorPane>

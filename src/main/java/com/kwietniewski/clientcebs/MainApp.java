@@ -2,6 +2,7 @@ package com.kwietniewski.clientcebs;
 
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
+import java.net.ConnectException;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Date;
@@ -40,7 +41,7 @@ public class MainApp extends Application{
     public static String CurrentUseremail;
     public static String role;
     public static JSONObject BookedExcursionsNamesID = new JSONObject();
-    //ResultController resultController = new ResultController();
+
     // Window change handler
     
     public void start(Stage window) throws IOException{
@@ -50,9 +51,10 @@ public class MainApp extends Application{
         
         Scene scene = new Scene(root);
         
-        window.setTitle("JavaFX and Maven");
+        window.setTitle("Cruise Excursion Booking System");
         window.setScene(scene);
         window.show();
+        window.setResizable(false);
         
     }
     
@@ -80,7 +82,7 @@ public class MainApp extends Application{
     }
     
     public static ArrayList nameOfAllExcursions() throws JSONException{
-        //ArrayList<JSONObject> contentsAsJsonObjects = new ArrayList<JSONObject>();
+       
         ArrayList<String> results = new ArrayList<String>();
         
        
@@ -174,20 +176,10 @@ public class MainApp extends Application{
         MainApp.role = json.getString("role");
         MainApp.CurrentUsername = json.getString("name");
         MainApp.CurrentUseremail = json.getString("email");
-        return role;
-        //roleHandle();
-        /*
-        MainApp.role = json.getString("role");
-        System.out.println(role);*/
-    }
-    /*
-    public void roleHandle() throws IOException, JSONException{
-        String jsonResponseRole = getJSON("http://localhost:8181/api/customers/fineOne?"+"id="+id);
-        JSONObject json = new JSONObject(jsonResponseRole);
-        MainApp.id = json.getInt("id");
         
+        return role;
     }
-    */
+    
     public int currentExcursion(String name) throws IOException, JSONException{
        
         name = name.replaceAll(" ", "+");
@@ -203,8 +195,22 @@ public class MainApp extends Application{
     
     public int loginDataHandler(String email, String password) throws IOException{
         connect();
+        
         String urlParameters = "http://localhost:8181/api/customers/login?" + "email="+email+"&password="+password;
-        return postPARAM(urlParameters);
+        System.out.println(urlParameters);
+        try{
+        postPARAM(urlParameters);
+        
+        }
+        catch (ConnectException ex)
+        {
+            return 404;
+        }
+        catch (HttpResponseException exc){
+            return 406;
+        }
+        
+        return 200;
 
     }
     
@@ -242,12 +248,6 @@ public class MainApp extends Application{
        
         
         String reponse = postJSON(url, json);
-       /*
-        if (reponse != "ok")
-        {
-            return 1;
-        }
-*/
         return 0;
     }
     
@@ -267,6 +267,7 @@ public class MainApp extends Application{
     
     public void deleteBooking(String name) throws JSONException, IOException{
         int bookingID = BookedExcursionsNamesID.getJSONObject(name).getInt("id");
+        System.out.println("TRIP ID: " + bookingID);
         String url = "http://localhost:8181/api/bookings/delete?"+"id="+bookingID;
         deletePARAM(url);
         
@@ -343,6 +344,9 @@ public class MainApp extends Application{
         System.out.println("STATUS CODE: " + statusCode);
         
         System.out.println("LOGIN " + response);
+        
+        String responseString = new BasicResponseHandler().handleResponse(response);
+        System.out.println(responseString);
         return statusCode;
     }
     
@@ -358,7 +362,10 @@ public class MainApp extends Application{
         
         int statusCode = response.getStatusLine().getStatusCode();
         System.out.println("STATUS CODE: " + statusCode);
-      
+        
+        String responseString = new BasicResponseHandler().handleResponse(response);
+        System.out.println(responseString);
+        
         return statusCode;
     }
     
@@ -375,6 +382,9 @@ public class MainApp extends Application{
         
         int statusCode = response.getStatusLine().getStatusCode();
         System.out.println("STATUS CODE: " + statusCode);
+        
+        String responseString = new BasicResponseHandler().handleResponse(response);
+        System.out.println(responseString);
       
         return response;
     }

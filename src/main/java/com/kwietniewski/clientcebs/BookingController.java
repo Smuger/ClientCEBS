@@ -21,7 +21,7 @@ public class BookingController implements Initializable {
     // Layouts
     private final static String browse = "/fxml/Browse.fxml";
     private final static String detail = "/fxml/Detail.fxml";
-    private boolean firstTime = true;
+
     
     MainApp model = new MainApp();
     
@@ -50,12 +50,9 @@ public class BookingController implements Initializable {
     private void refreshButton(ActionEvent event) throws JSONException, IOException{
         
         
-        if(firstTime){
-            System.out.println("REFRESH STARTS");
-            model.currentCustomer();
-            firstTime = false;
-        }
-        
+
+        System.out.println("REFRESH STARTS");
+        model.currentCustomer();
         System.out.println("CHECK CURRENT CUSTOMER");
         clearListView();
         System.out.println("CLEAN LIST VIEW");
@@ -72,8 +69,10 @@ public class BookingController implements Initializable {
     @FXML
     private void deleteButton(ActionEvent event) throws JSONException, IOException{
         String name = listView.getSelectionModel().getSelectedItem().toString();
+        System.out.println("DELETE THIS TRIP FROM MY BOOKING LIST " + name);
         model.deleteBooking(name);
         clearListView();
+
     }
     
     private void populateListView(ArrayList allExcursionsNames) throws JSONException{

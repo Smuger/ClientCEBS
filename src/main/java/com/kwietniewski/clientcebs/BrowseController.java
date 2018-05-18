@@ -81,9 +81,6 @@ public class BrowseController implements Initializable {
          
             delete.setVisible(true);
         }
-        else{
-            
-        }
         
     }
     
@@ -118,7 +115,6 @@ public class BrowseController implements Initializable {
         nameOfExcursion.setVisible(false);
         datePicker.setVisible(false);
         book.setVisible(false);
-
     }
     
     @FXML

@@ -201,10 +201,10 @@ public class MainApp extends Application{
         return exID;
     }
     
-    public void loginDataHandler(String email, String password) throws IOException{
+    public int loginDataHandler(String email, String password) throws IOException{
         connect();
         String urlParameters = "http://localhost:8181/api/customers/login?" + "email="+email+"&password="+password;
-        postPARAM(urlParameters);
+        return postPARAM(urlParameters);
 
     }
     
@@ -308,10 +308,12 @@ public class MainApp extends Application{
         
         System.out.println("DATA TO SEND IN URL");
         
+        
         HttpGet HttpGet = new HttpGet(url);
         System.out.println("HTTP GET ESTABLISHED");
 
-        //HttpGet.addHeader("content-type", "application/json");
+        HttpGet.addHeader("content-type", "application/json");
+        //BasicResponseHandler responseHandler = new BasicResponseHandler();
         
         HttpResponse response = client.execute(HttpGet);
         //System.out.println(response);
@@ -326,7 +328,7 @@ public class MainApp extends Application{
         return responseString;
     }
     
-    public HttpResponse postPARAM(String url) throws IOException{
+    public int postPARAM(String url) throws IOException{
         
         HttpPost httpPost = new HttpPost(url);
         System.out.println("HTTP POST ESTABLISHED");
@@ -340,10 +342,11 @@ public class MainApp extends Application{
         int statusCode = response.getStatusLine().getStatusCode();
         System.out.println("STATUS CODE: " + statusCode);
         
-        return response;
+        System.out.println("LOGIN " + response);
+        return statusCode;
     }
     
-    public HttpResponse getPARAM(String url) throws IOException{
+    public int getPARAM(String url) throws IOException{
         HttpGet HttpGet = new HttpGet(url);
         System.out.println("HTTP GET ESTABLISHED");
         
@@ -356,12 +359,13 @@ public class MainApp extends Application{
         int statusCode = response.getStatusLine().getStatusCode();
         System.out.println("STATUS CODE: " + statusCode);
       
-        return response;
+        return statusCode;
     }
     
     public HttpResponse deletePARAM(String url) throws IOException{
         HttpDelete HttpDelete = new HttpDelete(url);
         System.out.println("HTTP DELETE ESTABLISHED");
+        System.out.println(url);
         
         System.out.print("DATA TRANSFER ");
         System.out.println("| DATA TYPE JSON");

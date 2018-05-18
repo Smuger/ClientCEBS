@@ -9,6 +9,7 @@ import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.TextField;
 import javafx.scene.text.Text;
+import org.apache.http.client.HttpResponseException;
 
 public class LoginController implements Initializable {
     
@@ -36,16 +37,13 @@ public class LoginController implements Initializable {
     }
     
     @FXML
-    private void loginButton(ActionEvent event) throws Exception{
-        // TO DO login fail handler
-        
-        try {
-            model.loginDataHandler(email.getText(), password.getText());
+    private void loginButton(ActionEvent event) throws IOException {
+        int code = model.loginDataHandler(email.getText(), password.getText());
+        if(code == 200){
             model.changeScene(browse);
         }
-        catch(Exception ex){
-            error.setText("Server Down");
-
+        else{
+            error.setText("Wrong credentials");
         }
     }
 }

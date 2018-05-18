@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import javafx.scene.image.*?>
 <?import javafx.geometry.*?>
 <?import java.lang.*?>
 <?import java.net.*?>
@@ -14,40 +15,46 @@
     </stylesheets>
    <children>
       <BorderPane prefHeight="400.0" prefWidth="602.0">
-         <center>
-            <VBox prefHeight="342.0" prefWidth="351.0" BorderPane.alignment="CENTER">
-               <children>
-                  <Label text="Full name" />
-                  <TextField fx:id="name" onMouseClicked="#handleMouseClick" promptText="Full name" />
-                  <Label text="Email" />
-                  <TextField fx:id="email" onMouseClicked="#handleMouseClick" promptText="Email" />
-                  <Label text="Password (Please provide it to change data)" />
-                  <TextField fx:id="password1" promptText="Password" />
-                  <TextField fx:id="password2" promptText="Password" />
-                  <BorderPane prefHeight="200.0" prefWidth="200.0">
-                     <center>
-                        <AnchorPane prefHeight="200.0" prefWidth="200.0" BorderPane.alignment="CENTER">
-                           <children>
-                              <VBox alignment="CENTER" prefHeight="108.0" prefWidth="352.0">
-                                 <children>
-                                    <Label fx:id="error" />
-                                    <Button mnemonicParsing="false" onAction="#updateButton" text="Change" textAlignment="CENTER" />
-                                    <Button mnemonicParsing="false" onAction="#backButton" text="Back" textAlignment="CENTER" />
-                                 </children>
-                              </VBox>
-                           </children>
-                        </AnchorPane>
-                     </center>
-                  </BorderPane>
-               </children>
-            </VBox>
-         </center>
          <opaqueInsets>
             <Insets />
          </opaqueInsets>
-         <padding>
-            <Insets left="100.0" right="100.0" />
-         </padding>
+         <center>
+            <AnchorPane prefHeight="200.0" prefWidth="200.0" BorderPane.alignment="CENTER">
+               <children>
+                  <ImageView fitHeight="421.0" fitWidth="629.0" pickOnBounds="true" preserveRatio="true">
+                     <image>
+                        <Image url="@background.jpg" />
+                     </image>
+                  </ImageView>
+                  <VBox prefHeight="342.0" prefWidth="351.0">
+                     <children>
+                        <Label text="Full name" />
+                        <TextField fx:id="name" onMouseClicked="#handleMouseClick" promptText="Full name" />
+                        <Label text="Email" />
+                        <TextField fx:id="email" onMouseClicked="#handleMouseClick" promptText="Email" />
+                        <Label text="Password (Please provide it to change data)" textFill="WHITE" />
+                        <TextField fx:id="password1" promptText="Password" />
+                        <TextField fx:id="password2" promptText="Password" />
+                        <BorderPane prefHeight="200.0" prefWidth="200.0">
+                           <center>
+                              <AnchorPane prefHeight="200.0" prefWidth="200.0" BorderPane.alignment="CENTER">
+                                 <children>
+                                    <VBox alignment="CENTER" prefHeight="108.0" prefWidth="352.0">
+                                       <children>
+                                          <Label fx:id="error" />
+                                          <Button mnemonicParsing="false" onAction="#updateButton" text="Change" textAlignment="CENTER" />
+                                          <Button mnemonicParsing="false" onAction="#backButton" text="Back" textAlignment="CENTER" />
+                                       </children>
+                                    </VBox>
+                                 </children>
+                              </AnchorPane>
+                           </center>
+                        </BorderPane>
+                     </children>
+                  </VBox>
+               </children>
+            </AnchorPane>
+         </center>
       </BorderPane>
    </children>
 </AnchorPane>

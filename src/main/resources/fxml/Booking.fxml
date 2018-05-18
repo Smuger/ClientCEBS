@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import javafx.scene.image.*?>
 <?import java.lang.*?>
 <?import java.net.*?>
 <?import java.util.*?>
@@ -16,6 +17,11 @@
          <center>
             <AnchorPane prefHeight="200.0" prefWidth="200.0" BorderPane.alignment="CENTER">
                <children>
+                  <ImageView fitHeight="421.0" fitWidth="629.0" pickOnBounds="true" preserveRatio="true">
+                     <image>
+                        <Image url="@background.jpg" />
+                     </image>
+                  </ImageView>
                     <HBox prefHeight="394.0" prefWidth="593.0">
                         <children>
                             <VBox prefHeight="394.0" prefWidth="539.0">

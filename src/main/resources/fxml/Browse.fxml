@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import javafx.scene.image.*?>
 <?import java.lang.*?>
 <?import java.net.*?>
 <?import java.util.*?>
@@ -14,30 +15,39 @@
    <children>
       <BorderPane prefHeight="400.0" prefWidth="600.0">
          <center>
-            <HBox prefHeight="136.0" prefWidth="71.0" BorderPane.alignment="CENTER">
+            <AnchorPane prefHeight="200.0" prefWidth="200.0" BorderPane.alignment="CENTER">
                <children>
-                  <VBox prefHeight="400.0" prefWidth="412.0">
+                  <ImageView fitHeight="421.0" fitWidth="629.0" pickOnBounds="true" preserveRatio="true">
+                     <image>
+                        <Image url="@background.jpg" />
+                     </image>
+                  </ImageView>
+                  <HBox prefHeight="417.0" prefWidth="629.0">
                      <children>
-                        <ListView fx:id="listView" onMouseClicked="#handleMouseClick" prefHeight="235.0" prefWidth="411.0" />
-                        <Label fx:id="nameOfExcursion" text="{excursion}" visible="false" />
-                        <DatePicker fx:id="datePicker" visible="false" />
-                        <Label fx:id="labelSlider" text="Number of tickets: 1" visible="false" />
-                        <Slider fx:id="slider" blockIncrement="1.0" majorTickUnit="1.0" max="10.0" min="1.0" minorTickCount="0" onMouseClicked="#newTickedValue" showTickLabels="true" showTickMarks="true" snapToTicks="true" value="1.0" visible="false" />
-                        <Label fx:id="error" prefHeight="27.0" prefWidth="438.0" textAlignment="CENTER" visible="false" />
-                        <Button fx:id="book" mnemonicParsing="false" onAction="#bookButton" text="Book" visible="false" />
-                        <Button fx:id="delete" mnemonicParsing="false" onAction="#deleteHandle" text="[ADMIN] Delete" visible="false" />
+                        <VBox prefHeight="400.0" prefWidth="412.0">
+                           <children>
+                              <ListView fx:id="listView" onMouseClicked="#handleMouseClick" prefHeight="235.0" prefWidth="411.0" />
+                              <Label fx:id="nameOfExcursion" text="{excursion}" textFill="WHITE" visible="false" />
+                              <DatePicker fx:id="datePicker" visible="false" />
+                              <Label fx:id="labelSlider" text="Number of tickets: 1" textFill="WHITE" visible="false" />
+                              <Slider fx:id="slider" blockIncrement="1.0" majorTickUnit="1.0" max="10.0" min="1.0" minorTickCount="0" onMouseClicked="#newTickedValue" showTickLabels="true" showTickMarks="true" snapToTicks="true" value="1.0" visible="false" />
+                              <Label fx:id="error" prefHeight="27.0" prefWidth="438.0" textAlignment="CENTER" textFill="WHITE" visible="false" />
+                              <Button fx:id="book" mnemonicParsing="false" onAction="#bookButton" text="Book" visible="false" />
+                              <Button fx:id="delete" mnemonicParsing="false" onAction="#deleteHandle" text="[ADMIN] Delete" visible="false" />
+                           </children>
+                        </VBox>
+                        <VBox prefHeight="400.0" prefWidth="191.0">
+                           <children>
+                              <TextField fx:id="search" promptText="Browse Excursion" />
+                              <Button mnemonicParsing="false" onAction="#searchButton" text="Search" />
+                              <Button fx:id="myBookings" mnemonicParsing="false" onAction="#bookingButton" text="My Bookings" />
+                              <Button fx:id="logout" mnemonicParsing="false" onAction="#logoutButton" text="Logout" />
+                           </children>
+                        </VBox>
                      </children>
-                  </VBox>
-                  <VBox prefHeight="400.0" prefWidth="191.0">
-                     <children>
-                        <TextField fx:id="search" promptText="Browse Excursion" />
-                        <Button mnemonicParsing="false" onAction="#searchButton" text="Search" />
-                        <Button fx:id="myBookings" mnemonicParsing="false" onAction="#bookingButton" text="My Bookings" />
-                        <Button fx:id="logout" mnemonicParsing="false" onAction="#logoutButton" text="Logout" />
-                     </children>
-                  </VBox>
+                  </HBox>
                </children>
-            </HBox>
+            </AnchorPane>
          </center>
       </BorderPane>
    </children>

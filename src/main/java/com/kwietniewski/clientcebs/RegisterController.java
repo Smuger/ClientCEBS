@@ -46,16 +46,22 @@ public class RegisterController implements Initializable {
     
     @FXML
     private void registerButton(ActionEvent event) throws IOException{
-        try{
+        if (passwd1.getText().equals(passwd2.getText())){
+            try{
             
             model.registerDataHandler(name.getText(), email.getText(), passwd1.getText(), 1, user);
             
             model.changeScene(login);
         }
         catch (Exception ex){
-           
+           System.out.println(ex);
             error.setText("One of textfields is empty");
           
         }
+        }
+        else {
+            error.setText("password do not match");
+        }
+        
     }
 }

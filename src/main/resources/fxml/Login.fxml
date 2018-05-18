@@ -1,5 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import javafx.scene.image.*?>
+<?import javafx.geometry.*?>
 <?import javafx.scene.text.*?>
 <?import java.lang.*?>
 <?import java.net.*?>
@@ -8,21 +10,49 @@
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 
-<AnchorPane id="AnchorPane" prefHeight="400.0" prefWidth="600.0" 
-            styleClass="mainFxmlClass" xmlns="http://javafx.com/javafx/8" 
-            xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.kwietniewski.clientcebs.LoginController">
-    <stylesheets>
-        <URL value="@/styles/login.css" />
-    </stylesheets>
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" style="-fx-background-color: a5ccda;" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.kwietniewski.clientcebs.LoginController">
    <children>
-      <VBox prefHeight="200.0" prefWidth="100.0">
-         <children>
-            <TextField fx:id="email" promptText="email" />
-            <TextField fx:id="password" promptText="Password" />
-            <Text fx:id="error" strokeType="OUTSIDE" strokeWidth="0.0" />
-            <Button mnemonicParsing="false" onAction="#loginButton" text="Login" />
-            <Button mnemonicParsing="false" onAction="#registerButton" text="Register" />
-         </children>
-      </VBox>
+      <BorderPane prefHeight="200.0" prefWidth="200.0">
+         <center>
+            <AnchorPane prefHeight="200.0" prefWidth="200.0" BorderPane.alignment="CENTER">
+               <children>
+                  <ImageView fitHeight="421.0" fitWidth="629.0" pickOnBounds="true" preserveRatio="true">
+                     <image>
+                        <Image url="@background.jpg" />
+                     </image>
+                  </ImageView>
+                  <VBox alignment="CENTER" layoutX="209.0" layoutY="31.0" prefHeight="327.0" prefWidth="212.0">
+                     <children>
+                            <ImageView fitHeight="150.0" fitWidth="200.0" pickOnBounds="true" preserveRatio="true">
+                                <image>
+                                    <Image url="@logo.png" />
+                                </image>
+                           <VBox.margin>
+                              <Insets bottom="30.0" />
+                           </VBox.margin>
+                            </ImageView>
+                        <TextField fx:id="email" promptText="email" />
+                        <TextField fx:id="password" promptText="Password" />
+                        <Text fx:id="error" fill="WHITE" strokeType="OUTSIDE" strokeWidth="0.0" textAlignment="CENTER" wrappingWidth="201.0" />
+                        <BorderPane prefHeight="200.0" prefWidth="200.0">
+                           <center>
+                              <AnchorPane prefHeight="200.0" prefWidth="200.0" BorderPane.alignment="CENTER">
+                                 <children>
+                                    <VBox alignment="CENTER" prefHeight="104.0" prefWidth="200.0">
+                                       <children>
+                                          <Button mnemonicParsing="false" onAction="#loginButton" text="Login" textAlignment="CENTER" />
+                                          <Button mnemonicParsing="false" onAction="#registerButton" text="Register" textAlignment="CENTER" />
+                                       </children>
+                                    </VBox>
+                                 </children>
+                              </AnchorPane>
+                           </center>
+                        </BorderPane>
+                     </children>
+                  </VBox>
+               </children>
+            </AnchorPane>
+         </center>
+      </BorderPane>
    </children>
 </AnchorPane>

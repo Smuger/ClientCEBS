@@ -38,12 +38,19 @@ public class LoginController implements Initializable {
     
     @FXML
     private void loginButton(ActionEvent event) throws IOException {
+        System.out.println(email.getText()+ password.getText());
         int code = model.loginDataHandler(email.getText(), password.getText());
+   
         if(code == 200){
             model.changeScene(browse);
         }
+        else if (code == 404){
+            error.setText("No internet connection");
+        }
         else{
-            error.setText("Wrong credentials");
+         
+        error.setText("Wrong credentials");
+
         }
     }
 }

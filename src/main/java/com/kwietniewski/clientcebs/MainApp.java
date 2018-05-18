@@ -2,6 +2,7 @@ package com.kwietniewski.clientcebs;
 
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
+import java.net.ConnectException;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Date;
@@ -53,6 +54,7 @@ public class MainApp extends Application{
         window.setTitle("Cruise Excursion Booking System");
         window.setScene(scene);
         window.show();
+        window.setResizable(false);
         
     }
     
@@ -193,8 +195,22 @@ public class MainApp extends Application{
     
     public int loginDataHandler(String email, String password) throws IOException{
         connect();
+        
         String urlParameters = "http://localhost:8181/api/customers/login?" + "email="+email+"&password="+password;
-        return postPARAM(urlParameters);
+        System.out.println(urlParameters);
+        try{
+        postPARAM(urlParameters);
+        
+        }
+        catch (ConnectException ex)
+        {
+            return 404;
+        }
+        catch (HttpResponseException exc){
+            return 406;
+        }
+        
+        return 200;
 
     }
     

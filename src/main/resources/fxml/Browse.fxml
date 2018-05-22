@@ -26,7 +26,7 @@
                      <children>
                         <VBox alignment="TOP_CENTER" prefHeight="400.0" prefWidth="412.0">
                            <children>
-                              <ListView fx:id="listView" onMouseClicked="#handleMouseClick" prefHeight="235.0" prefWidth="411.0" />
+                              <ListView fx:id="listView" onMouseClicked="#handleMouseClick" opacity="0.8" prefHeight="235.0" prefWidth="411.0" />
                               <Label fx:id="nameOfExcursion" text="{excursion}" textFill="WHITE" visible="false" />
                               <DatePicker fx:id="datePicker" visible="false" />
                               <Label fx:id="labelSlider" text="Number of tickets: 1" textFill="WHITE" visible="false" />

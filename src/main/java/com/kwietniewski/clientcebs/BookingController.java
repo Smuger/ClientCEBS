@@ -33,7 +33,23 @@ public class BookingController implements Initializable {
     
     @Override
     public void initialize(URL url, ResourceBundle rb) {
-        // TODO
+        try{
+            System.out.println("REFRESH STARTS");
+            model.currentCustomer();
+            System.out.println("CHECK CURRENT CUSTOMER");
+            clearListView();
+            System.out.println("CLEAN LIST VIEW");
+            model.searchBookingHandler();
+            System.out.println("NEW BOOKING SEARCH");
+            ArrayList allBookedExcursionsNames = model.nameOfBookedExcursions();
+            System.out.println("GET NAMES");
+            populateListView(allBookedExcursionsNames); 
+            System.out.println("POPULATE LIST VIEW");
+        }
+        catch(Exception ex){
+            System.err.println("Refresh fail");
+        }
+        
     }
     
     @FXML
@@ -47,31 +63,28 @@ public class BookingController implements Initializable {
     }
     
     @FXML
-    private void refreshButton(ActionEvent event) throws JSONException, IOException{
-        
-        
-
-        System.out.println("REFRESH STARTS");
-        model.currentCustomer();
-        System.out.println("CHECK CURRENT CUSTOMER");
-        clearListView();
-        System.out.println("CLEAN LIST VIEW");
-        model.searchBookingHandler();
-        System.out.println("NEW BOOKING SEARCH");
-        ArrayList allBookedExcursionsNames = model.nameOfBookedExcursions();
-        System.out.println("GET NAMES");
-        populateListView(allBookedExcursionsNames); 
-        System.out.println("POPULATE LIST VIEW");
-
-         
-    }
-    
-    @FXML
     private void deleteButton(ActionEvent event) throws JSONException, IOException{
-        String name = listView.getSelectionModel().getSelectedItem().toString();
-        System.out.println("DELETE THIS TRIP FROM MY BOOKING LIST " + name);
-        model.deleteBooking(name);
-        clearListView();
+        try{
+            String name = listView.getSelectionModel().getSelectedItem().toString();
+            System.out.println("DELETE THIS TRIP FROM MY BOOKING LIST " + name);
+            model.deleteBooking(name);
+            clearListView();
+            System.out.println("REFRESH STARTS");
+            model.currentCustomer();
+            System.out.println("CHECK CURRENT CUSTOMER");
+            clearListView();
+            System.out.println("CLEAN LIST VIEW");
+            model.searchBookingHandler();
+            System.out.println("NEW BOOKING SEARCH");
+            ArrayList allBookedExcursionsNames = model.nameOfBookedExcursions();
+            System.out.println("GET NAMES");
+            populateListView(allBookedExcursionsNames); 
+            System.out.println("POPULATE LIST VIEW");
+
+        }
+        catch(Exception ex){
+            System.err.println(listView.getSelectionModel().getSelectedItem().toString() + " " + ex);
+        }
 
     }
     

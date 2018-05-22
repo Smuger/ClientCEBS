@@ -10,6 +10,7 @@ import javafx.fxml.Initializable;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.input.MouseEvent;
+import org.apache.http.client.HttpResponseException;
 import org.json.JSONException;
 
 public class DetailController implements Initializable {
@@ -33,7 +34,7 @@ public class DetailController implements Initializable {
     
     @Override
     public void initialize(URL url, ResourceBundle rb) {
-
+        
     }
     
     @FXML 
@@ -53,9 +54,14 @@ public class DetailController implements Initializable {
 
     @FXML
     private void updateButton(ActionEvent event) throws JSONException, IOException{
+        try{
+            model.updateDataHandler(name.getText(), email.getText(), password1.getText(), 1, user);
+            error.setText("User data updated");
+        }
+        catch (HttpResponseException ex){
+            error.setText("Password is incorrect");
+        }
         
-        model.updateDataHandler(name.getText(), email.getText(), password1.getText(), 1, user);
-        error.setText("User data updated");
         
     }
 

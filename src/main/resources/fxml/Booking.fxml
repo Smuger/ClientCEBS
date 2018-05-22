@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import javafx.scene.image.*?>
 <?import java.lang.*?>
 <?import java.net.*?>
 <?import java.util.*?>
@@ -16,17 +17,21 @@
          <center>
             <AnchorPane prefHeight="200.0" prefWidth="200.0" BorderPane.alignment="CENTER">
                <children>
+                  <ImageView fitHeight="421.0" fitWidth="629.0" pickOnBounds="true" preserveRatio="true">
+                     <image>
+                        <Image url="@background.jpg" />
+                     </image>
+                  </ImageView>
                     <HBox prefHeight="394.0" prefWidth="593.0">
                         <children>
-                            <VBox prefHeight="394.0" prefWidth="539.0">
+                            <VBox alignment="TOP_CENTER" prefHeight="394.0" prefWidth="539.0">
                                 <children>
                                     <ListView fx:id="listView" prefHeight="200.0" prefWidth="200.0" />
-                                    <Button fx:id="refresh" mnemonicParsing="false" onAction="#refreshButton" text="Refresh" />
                                     <Button mnemonicParsing="false" onAction="#detailButton" text="Account details" />
                                     <Button mnemonicParsing="false" onAction="#backButton" text="Back" />
                                 </children>
                             </VBox>
-                            <VBox prefHeight="394.0" prefWidth="101.0">
+                            <VBox alignment="TOP_CENTER" prefHeight="394.0" prefWidth="101.0">
                                 <children>
                                     <Button mnemonicParsing="false" onAction="#deleteButton" text="Delete" />
                                 </children>

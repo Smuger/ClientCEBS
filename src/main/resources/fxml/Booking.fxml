@@ -26,7 +26,7 @@
                         <children>
                             <VBox alignment="TOP_CENTER" prefHeight="394.0" prefWidth="539.0">
                                 <children>
-                                    <ListView fx:id="listView" prefHeight="200.0" prefWidth="200.0" />
+                                    <ListView fx:id="listView" prefHeight="200.0" prefWidth="200.0"  opacity="0.8"/>
                                     <Button mnemonicParsing="false" onAction="#detailButton" text="Account details" />
                                     <Button mnemonicParsing="false" onAction="#backButton" text="Back" />
                                 </children>

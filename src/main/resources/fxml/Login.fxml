@@ -31,8 +31,9 @@
                               <Insets bottom="30.0" />
                            </VBox.margin>
                             </ImageView>
+                        <Label text="Email:" alignment="CENTER" contentDisplay="CENTER" prefHeight="27.0" prefWidth="438.0" textAlignment="CENTER" textFill="WHITE" />
                         <TextField fx:id="email" promptText="email" />
-                        <TextField fx:id="password" promptText="Password" />
+                        <PasswordField fx:id="password" promptText="Password" />
                         <Text fx:id="error" fill="WHITE" strokeType="OUTSIDE" strokeWidth="0.0" textAlignment="CENTER" wrappingWidth="201.0" />
                         <BorderPane prefHeight="200.0" prefWidth="200.0">
                            <center>

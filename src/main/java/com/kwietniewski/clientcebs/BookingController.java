@@ -21,6 +21,7 @@ public class BookingController implements Initializable {
     // Layouts
     private final static String browse = "/fxml/Browse.fxml";
     private final static String detail = "/fxml/Detail.fxml";
+    private final static String booking = "/fxml/Booking.fxml";
 
     
     MainApp model = new MainApp();
@@ -80,9 +81,13 @@ public class BookingController implements Initializable {
             System.out.println("GET NAMES");
             populateListView(allBookedExcursionsNames); 
             System.out.println("POPULATE LIST VIEW");
+            
+         
 
         }
         catch(Exception ex){
+            model.changeScene(browse);
+            model.changeScene(booking);
             System.err.println(listView.getSelectionModel().getSelectedItem().toString() + " " + ex);
         }
 

@@ -371,11 +371,8 @@ public class MainApp extends Application{
     
     public HttpResponse deletePARAM(String url) throws IOException{
         HttpDelete HttpDelete = new HttpDelete(url);
-        System.out.println("HTTP DELETE ESTABLISHED");
+        System.out.println("HTTP DELETE ESTABLISHED BY CLIENT: " + client);
         System.out.println(url);
-        
-        System.out.print("DATA TRANSFER ");
-        System.out.println("| DATA TYPE JSON");
         
         HttpResponse response = client.execute(HttpDelete);
         System.out.println("RESPONSE RECEIVED");

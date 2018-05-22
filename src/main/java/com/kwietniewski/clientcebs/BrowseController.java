@@ -66,21 +66,27 @@ public class BrowseController implements Initializable {
     @FXML
     private Slider slider;
 
-    
     @FXML 
     public void handleMouseClick(MouseEvent arg0) throws IOException, JSONException {
-        nameOfExcursion.setText(listView.getSelectionModel().getSelectedItem().toString());
-        nameOfExcursion.setVisible(true);
-        datePicker.setVisible(true);
-        book.setVisible(true);
-        slider.setVisible(true);
-        labelSlider.setVisible(true);
-        String role = model.currentCustomer();
-
-        if (role.equals("ADMIN")){
-         
-            delete.setVisible(true);
+        try{
+            nameOfExcursion.setText(listView.getSelectionModel().getSelectedItem().toString());
+            nameOfExcursion.setVisible(true);
+            datePicker.setVisible(true);
+            book.setVisible(true);
+            slider.setVisible(true);
+            labelSlider.setVisible(true);
         }
+        
+        catch(NullPointerException ex){
+            error.setText("No excursion selected");
+            error.setVisible(true);
+        }
+        
+        String role = model.currentCustomer();
+        if (role.equals("ADMIN")){
+
+                delete.setVisible(true);
+            }
         
     }
     
@@ -109,6 +115,7 @@ public class BrowseController implements Initializable {
     
     @FXML
     private void logoutButton(ActionEvent event) throws IOException{
+        System.out.println("LOGOUT");
         model.changeScene(login);
         model.disconnect();
         listView.setVisible(false);
@@ -145,30 +152,39 @@ public class BrowseController implements Initializable {
         System.out.println("LISTVIEW POPULATED");
     }
     
+    
+    
     @FXML
     private void bookButton(ActionEvent event) throws JSONException, IOException{
         String name = listView.getSelectionModel().getSelectedItem().toString();
         LocalDate date = datePicker.getValue();
        
-
-        int returnValue = model.book(name, seats, date);
-        listView.setVisible(false);
-        nameOfExcursion.setVisible(false);
-        datePicker.setVisible(false);
-        book.setVisible(false);
-        slider.setVisible(false);
-        labelSlider.setVisible(false);
-        error.setVisible(true);
-        delete.setVisible(false);
-        
-        if (returnValue == 1)
-        {
-            error.setText("This account has book this trip already");
+        if (date.isAfter(LocalDate.now())){
+            int returnValue = model.book(name, seats, date);
+            listView.setVisible(false);
+            nameOfExcursion.setVisible(false);
+            datePicker.setVisible(false);
+            book.setVisible(false);
+            slider.setVisible(false);
+            labelSlider.setVisible(false);
             error.setVisible(true);
-           
+            delete.setVisible(false);
+
+            if (returnValue == 1)
+            {
+                error.setText("This account has book this trip already");
+                error.setVisible(true);
+
+            }
+            error.setText("Booking success");
+            error.setVisible(true);
         }
-        error.setText("Booking success");
-        error.setVisible(true);
+        else{
+            error.setText("Date not available");
+            error.setVisible(true);
+        }
+
+        
     }
     
     @FXML

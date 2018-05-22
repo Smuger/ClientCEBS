@@ -27,7 +27,7 @@
                         <Image url="@background.jpg" />
                      </image>
                   </ImageView>
-                  <VBox layoutX="-1.0" layoutY="-100.0" prefHeight="400.0" prefWidth="206.0">
+                  <VBox alignment="CENTER" layoutX="-1.0" layoutY="-100.0" prefHeight="400.0" prefWidth="206.0">
                      <children>
                         <TextField fx:id="name" promptText="Full name" />
                         <Label text="( Min 3 / Max 10 characters)" textFill="WHITE" />
@@ -36,8 +36,8 @@
                         <TextField fx:id="passwd1" promptText="Password" />
                         <Label text="( Min 3 / Max 30 characters)" textFill="WHITE" />
                         <TextField fx:id="passwd2" promptText="Password" />
-                        <Label text="( Min 3 / Max 30 characters)" textFill="WHITE" />
-                        <CheckBox mnemonicParsing="false" onAction="#adminHandler" text="Are you a trip provider?" textFill="WHITE" />
+                        <Label text="( Min 3 / Max 30 characters)" textAlignment="CENTER" textFill="WHITE" />
+                        <CheckBox mnemonicParsing="false" onAction="#adminHandler" text="Are you a trip provider?" textAlignment="CENTER" textFill="WHITE" />
                         <BorderPane prefHeight="200.0" prefWidth="200.0">
                            <center>
                               <AnchorPane prefHeight="200.0" prefWidth="200.0" BorderPane.alignment="CENTER">
